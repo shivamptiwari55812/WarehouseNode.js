@@ -1,15 +1,45 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// import './App.css'
+import{createBrowserRouter, RouterProvider} from "react-router-dom"
+import {Dashboard} from "../components/Dashboard.jsx"
+import { Header1 } from '../components/header.jsx'
+import { LandingPage} from '../components/Landing.jsx'
+
+function DashboardLayout(){
+  return(
+    <>
+    <Header1/>
+    <Dashboard/>
+    </>
+  )
+}
+const router = createBrowserRouter([
+  {
+    path:"/Dashboard",
+    element: <DashboardLayout/>
+  },
+   {
+    path:"/",
+    element: <LandingPage/>
+  },
+   {
+    path:"/header",
+    element: <Header1/>
+  },
+])
 
 function App() {
+  
   const [count, setCount] = useState(0)
 
   return (
-    <>
-    <h1> Jay Shree Ram </h1>
-     </>
+    
+   
+    
+    <div>
+<RouterProvider router ={router}/>
+    </div>
+     
   )
 }
 
