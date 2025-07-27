@@ -3,7 +3,7 @@ import { useState } from 'react'
 import{createBrowserRouter, RouterProvider} from "react-router-dom"
 import {Dashboard} from "../components/Dashboard.jsx"
 import { Header1 } from '../components/header.jsx'
-import { LandingPage} from '../components/Landing.jsx'
+import  Landing from '../components/Landing.jsx'
 
 function DashboardLayout(){
   return(
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
   },
    {
     path:"/",
-    element: <LandingPage/>
+    element: <Landing/>
   },
    {
     path:"/header",
