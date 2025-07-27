@@ -1,10 +1,13 @@
 import { useState } from 'react'
-// import './App.css'
+
 import{createBrowserRouter, RouterProvider} from "react-router-dom"
-import {Dashboard} from "../components/Dashboard.jsx"
-import { Header1 } from '../components/header.jsx'
 import  Landing from '../components/Landing.jsx'
 
+import {Dashboard} from "../components/Warehouse/Dashboard.jsx"
+import { Header1 } from '../components/Warehouse/header.jsx'
+import {Roles} from "../components/setup/SltRole.jsx"
+import { AddCompany } from '../components/setup/addCompany.jsx'
+import {WarehouseDetails} from "../components/Warehouse/setWarehouse.jsx"
 function DashboardLayout(){
   return(
     <>
@@ -12,6 +15,15 @@ function DashboardLayout(){
     <Dashboard/>
     </>
   )
+}
+function Roles1(){
+  return(
+    <>
+    <Header1/>
+    <Roles/>
+    </>
+  )
+
 }
 const router = createBrowserRouter([
   {
@@ -26,6 +38,18 @@ const router = createBrowserRouter([
     path:"/header",
     element: <Header1/>
   },
+  {
+    path:"/roles",
+    element:<Roles1/>
+  },
+  {
+    path:"/inboundCompanyDetails",
+    element:<AddCompany/>
+  },
+  {
+    path:'/',
+    element:<WarehouseDetails/>
+  }
 ])
 
 function App() {

@@ -1,0 +1,56 @@
+.formRows{
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+    flex-wrap: wrap;
+    gap:0.5vw;
+    padding:10px;
+
+    
+}
+
+.formCompanyRegistration h1{
+    color:rgba(255, 68, 0, 0.771);
+    font-size: medium;
+    padding:10px;
+}
+.formCompanyRegistration{
+    height:auto;
+    display: flex;
+    margin-left: 30vw;
+    margin-top: 14vh;
+    flex-direction: column;
+    flex-wrap: wrap;
+    border:1px solid rgba(0, 0, 0, 0.242);
+    width:45vw;
+    background-color: #fff;
+    
+}
+
+.submitbtn{
+    color:hsl(36, 56%, 2%);
+    margin-top: 3vh;
+    margin-left: 15vw;
+    margin-bottom: 2vh;
+    height:4vh;
+    padding:5px;
+    width:fit-content;
+    /* align-items: center; */
+}
+
+.submitbtn:hover{
+    background-color: hsla(12, 100%, 50%, 0.605);
+}
+
+
+
+#companyName,
+#companyAddress,
+#companyEmail,
+#companyDocuments,
+#companyPhone{
+    border:none;
+    border-radius: 5px ;
+    background-color: #c8660b3d;
+    padding:10px;
+}
