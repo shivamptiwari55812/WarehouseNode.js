@@ -28,6 +28,7 @@
       min-height: 100vh;
       width: 100vw;
       display: flex;
+  
       flex-direction: column;
     }
     /* Header */
@@ -41,6 +42,7 @@
       padding: 0 32px;
       height: 64px;
       z-index: 10;
+      
     }
     .header-left {
       display: flex;

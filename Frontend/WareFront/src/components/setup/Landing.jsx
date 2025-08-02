@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import  '../cssfiles/Landing.css';
+import  '../../cssfiles/Landing.css';
 import { Menu, X, LogIn, Package, BarChart2, Truck, Users, Search, Shield, CheckCircle, MapPin, Phone, Mail} from 'lucide-react';
 
 const Landing = () => {
@@ -14,6 +14,7 @@ element.style.animationDelay = `${index * 0.1}s`;
 element.classList.add('animate-fade-in');
 });
 }, []);
+
 
 const toggleMobileMenu = () => {
 setIsMobileMenuOpen(!isMobileMenuOpen);

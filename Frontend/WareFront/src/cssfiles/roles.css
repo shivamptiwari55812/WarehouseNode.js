@@ -1,0 +1,93 @@
+/* Roles Form Container */
+.selectroles {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  min-height: 70vh;
+
+  background-color: #f4f4f4;
+}
+
+/* Roles Form Styling */
+.formroles {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+#roleshead {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* Labels */
+.formroles label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+  color: #444;
+}
+
+/* Inputs and Select */
+.formroles input[type="text"],
+.formroles input[type="password"],
+.formroles select {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.3s ease;
+}
+
+.formroles input:focus,
+.formroles select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Submit Button */
+#submitbtn {
+  padding: 0.85rem;
+  background-color: hsla(16, 100%, 50%, 0.721);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+#submitbtn:hover {
+  background-color: orangered;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .formroles {
+    padding: 1.5rem 1rem;
+  }
+  .selectroles{
+    min-height:50vh;
+  }
+
+  #roleshead {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  #submitbtn {
+    font-size: 0.95rem;
+  }
+}
+

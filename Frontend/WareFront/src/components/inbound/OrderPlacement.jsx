@@ -9,7 +9,7 @@ export function Orderplacement(){
 return(
     <>
 <div className="orderPlacement">
-    <form action="" id="orderPlacement form">
+    <form action="" id="orderPlacementform">
     <h1>Order Placement</h1>
     <div className="innerOrder">
         <div className="rowsOrder">

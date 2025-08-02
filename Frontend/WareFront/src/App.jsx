@@ -1,18 +1,28 @@
 import { useState } from 'react'
 
 import{createBrowserRouter, RouterProvider} from "react-router-dom"
-import  Landing from '../components/Landing.jsx'
+import  Landing from './components/setup/Landing.jsx'
 
-import {Dashboard} from "../components/Warehouse/Dashboard.jsx"
-import { Header1 } from '../components/Warehouse/header.jsx'
-import {Roles} from "../components/setup/SltRole.jsx"
-import { AddCompany } from '../components/setup/addCompany.jsx'
-import {WarehouseDetails} from "../components/Warehouse/setWarehouse.jsx"
+import {Dashboard} from "./components/Warehouse/Dashboard.jsx"
+import { Header1 } from './components/Warehouse/header.jsx'
+import {Roles} from "./components/setup/SltRole.jsx"
+import { AddCompany } from './components/setup/addCompany.jsx'
+import {WarehouseDetails} from "./components/Warehouse/setWarehouse.jsx"
+import { Orderplacement } from './components/inbound/OrderPlacement.jsx'
 function DashboardLayout(){
   return(
     <>
     <Header1/>
     <Dashboard/>
+    </>
+  )
+}
+
+function OrderPage(){
+  return(
+    <>
+    <Header1/>
+    <Orderplacement/>
     </>
   )
 }
@@ -23,8 +33,17 @@ function Roles1(){
     <Roles/>
     </>
   )
-
 }
+  function AddCompany1(){
+    return(
+      <>
+      <Header1/>
+      <AddCompany/>
+      </>
+    )
+  }
+
+
 const router = createBrowserRouter([
   {
     path:"/Dashboard",
@@ -33,6 +52,10 @@ const router = createBrowserRouter([
    {
     path:"/",
     element: <Landing/>
+  },
+  {
+    path:"/orderPlacement",
+    element: <OrderPage/>
   },
    {
     path:"/header",
@@ -44,10 +67,10 @@ const router = createBrowserRouter([
   },
   {
     path:"/inboundCompanyDetails",
-    element:<AddCompany/>
+    element:<AddCompany1/>
   },
   {
-    path:'/',
+    path:'/warehouseDetails',
     element:<WarehouseDetails/>
   }
 ])
