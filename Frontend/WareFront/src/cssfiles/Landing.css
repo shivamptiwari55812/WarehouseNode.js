@@ -7,6 +7,10 @@
   --brand-darkgray: #333333;
 }
 
+html,body{
+  overflow: auto;
+}
+
 @keyframes fadeIn {
   from { 
     opacity: 0; 

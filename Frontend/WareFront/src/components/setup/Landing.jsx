@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import  '../../cssfiles/Landing.css';
 import { Menu, X, LogIn, Package, BarChart2, Truck, Users, Search, Shield, CheckCircle, MapPin, Phone, Mail} from 'lucide-react';
 
@@ -20,8 +21,9 @@ const toggleMobileMenu = () => {
 setIsMobileMenuOpen(!isMobileMenuOpen);
 };
 
+const navigate = useNavigate();
 const handleLogin = () => {
-console.log('Navigate to login page');
+ navigate('/Login');
 };
 
 const handleRegister = () => {

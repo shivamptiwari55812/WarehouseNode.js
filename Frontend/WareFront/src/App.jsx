@@ -2,8 +2,8 @@ import { useState } from 'react'
 
 import{createBrowserRouter, RouterProvider} from "react-router-dom"
 import  Landing from './components/setup/Landing.jsx'
-
-import {Dashboard} from "./components/Warehouse/Dashboard.jsx"
+import Login from './components/setup/Login.jsx'
+import Dashboard from "./components/Warehouse/Dashboard.jsx"
 import { Header1 } from './components/Warehouse/header.jsx'
 import {Roles} from "./components/setup/SltRole.jsx"
 import { AddCompany } from './components/setup/addCompany.jsx'
@@ -53,6 +53,11 @@ const router = createBrowserRouter([
     path:"/",
     element: <Landing/>
   },
+  {
+    path:"/Login",
+    element: <Login/>
+  },
+  
   {
     path:"/orderPlacement",
     element: <OrderPage/>
