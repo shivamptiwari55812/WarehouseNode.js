@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ArrowRight, Heart, CheckCircle, TrendingUp, Smartphone } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import styles from '../../cssfiles/Login.module.css';
 
 const Login = () => {
@@ -7,9 +8,24 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    
     console.log('Login attempt:', { username, password, remember });
+
+    const response = await fetch("http://localhost:6000/api/Login",{
+        method:"POST",
+        header:{
+            "Content-Type":"Application-json"
+        },
+        body:{username, password}
+
+    })
+    const result = await response.json();
+    console.log(result);
+    if(result.ok){
+        window.location.href = '/Dashboard';
+    }
   };
 
   return (
@@ -62,15 +78,7 @@ const Login = () => {
             </div>
 
             <div className={styles.optionsRow}>
-              <div className={styles.rememberMe}>
-                <input 
-                  type="checkbox" 
-                  id="remember"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
-                />
-                <label htmlFor="remember">Remember me</label>
-              </div>
+             
               <a href="#" className={styles.forgotPassword}>Forgot password?</a>
             </div>
 

@@ -1,10 +1,13 @@
 import express from 'express';
-// yha controllers import krne h
+import { registration, verifyOTP, Login } from '../controller/authentication.js';
+
 
 const router = express.Router();
 
 
-// router.post('/scores',getScores)
-// router.get("/sendData",sendData )
+router.post('/registeration',registration)
+router.post("/verifyOTP",verifyOTP)
+router.post("/Login",Login)
+
 
 export default router;

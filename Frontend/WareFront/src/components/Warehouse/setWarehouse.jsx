@@ -1,4 +1,5 @@
 import {useState} from "react"
+import { useNavigate } from 'react-router-dom';
 import '../../cssfiles/warehouse.css'
 export function WarehouseDetails(){
     return(
