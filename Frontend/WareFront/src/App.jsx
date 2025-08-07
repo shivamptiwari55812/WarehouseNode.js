@@ -4,6 +4,7 @@ import{createBrowserRouter, RouterProvider} from "react-router-dom"
 import  Landing from './components/setup/Landing.jsx'
 import Login from './components/setup/Login.jsx'
 import SignUp from './components/setup/SignUp.jsx'
+import Verify from './components/setup/verify.jsx'
 import PrivacyPolicy from './components/setup/PrivacyPolicy';
 import TermsOfService from './components/setup/TermsOfService';
 import Dashboard from "./components/Warehouse/Dashboard.jsx"
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
   {
     path:"/SignUp",
     element: <SignUp/>
+  },
+  {
+    path:"/verify",
+    element: <Verify/>
   },
   {
     path:"/TermsOfService",

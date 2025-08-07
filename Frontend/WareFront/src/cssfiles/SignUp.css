@@ -120,7 +120,6 @@ body {
   font-size: 1.125rem;
 }
 
-/* Form Styles */
 .signup-form {
   display: flex;
   flex-direction: column;
@@ -251,9 +250,9 @@ body {
   color: #ea580c;
 }
 
-/* Image Section */
 .signup-image {
  flex: 1;
+ position: relative;
  display: block;
 }
 
@@ -271,7 +270,7 @@ body {
 
 
 .image-container {
-   height: 100%;
+  height: 100%;
   width: 100%;
   position: relative;
   border-radius: 1rem;
@@ -289,11 +288,14 @@ body {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent);
+  pointer-events: none; 
 }
 .form-card {
+  position: relative;
   background-color: #ffffff;
   padding: 2.5rem;
   border-radius: 1rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   animation: fadeIn 0.5s ease-out forwards;
+  z-index: 10;
 }

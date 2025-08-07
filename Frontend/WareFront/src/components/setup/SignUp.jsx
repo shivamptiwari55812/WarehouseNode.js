@@ -66,9 +66,9 @@ const SignUp = () => {
   };
   
   const handleSubmit = async (e) => {
+    console.log("Form submitted");
     e.preventDefault();
     if (!validateForm()) return;
-
     const payload = {
       username: formData.fullName,
       email: formData.email,
@@ -84,16 +84,19 @@ const SignUp = () => {
       });
 
       if (response.ok) {
-        const result = await response.json();
-        console.log(result);
-        localStorage.setItem('email', formData.email);
-        alert("Signup successful!");
+      const result = await response.json();
+      console.log(result);
+      localStorage.setItem('email', formData.email);
+       alert("Account successfully created!");
+      navigate('/verify');  
       } else {
-        console.error('Signup failed');
-        navigate('/error');
+        const errorData = await response.json();
+      console.error('Signup failed', errorData);
+      alert("Signup failed. Please try again.");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Error during signup:", err);
+    alert("Something went wrong. Try again later.");
     }
   };
 
