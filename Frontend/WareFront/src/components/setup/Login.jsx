@@ -1,130 +1,90 @@
 import { useState } from 'react';
-import { ArrowRight, Heart, CheckCircle, TrendingUp, Smartphone } from 'lucide-react';
 import styles from '../../cssfiles/Login.module.css';
+import { Mail, Lock } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
+  const [status, setStatus] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', { username, password, remember });
+    setLoading(true);
+    setStatus('');
+
+    try {
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus('Login successful!');
+        navigate('/dashboard'); // or wherever you want to redirect
+      } else {
+        setStatus(result.message || 'Login failed.');
+      }
+    } catch (error) {
+      setStatus('Network error. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className={styles.loginWrapper}>
-      <div className={styles.backgroundShapes}>
-        <div className={`${styles.shape} ${styles.shape1}`}></div>
-        <div className={`${styles.shape} ${styles.shape2}`}></div>
-        <div className={`${styles.shape} ${styles.shape3}`}></div>
+    <div className={styles.wrapper}>
+      <div className={styles.card}>
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <div className={styles.inputGroup}>
+            <label htmlFor="email">Email</label>
+            <div className={styles.inputContainer}>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+              />
+              <Mail size={18} className={styles.icon} />
+            </div>
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="password">Password</label>
+            <div className={styles.inputContainer}>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+              <Lock size={18} className={styles.icon} />
+            </div>
+          </div>
+
+          {status && <p className={styles.status}>{status}</p>}
+
+          <button type="submit" disabled={loading} className={styles.submitButton}>
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+
+        <p className={styles.forgotText}>
+          <Link to="/forgot-password">Forgot Password?</Link>
+        </p>
       </div>
-
-      <main className={styles.loginContainer}>
-        <div className={styles.formPanel}>
-          <div className={styles.logoContainer}>
-            <div className={styles.logo}>TG</div>
-            <h1 className={styles.companyName}>
-              <span className={styles.highlight}>TOTAL</span> GROUP
-            </h1>
-          </div>
-
-          <h2 className={styles.welcomeText}>Welcome Back</h2>
-          <p className={styles.subtitle}>Login to access your warehouse management dashboard</p>
-
-          <form id="loginForm" onSubmit={handleSubmit}>
-            <div className={styles.formGroup}>
-              <label htmlFor="username">Username</label>
-              <div className={styles.inputContainer}>
-                <input 
-                  type="text" 
-                  id="username" 
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your Username"
-                />
-                <span className={styles.error} id="usernameError"></span>
-              </div>
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="password">Password</label>
-              <div className={styles.inputContainer}>
-                <input 
-                  type="password" 
-                  id="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                />
-                <span className={styles.error} id="passwordError"></span>
-              </div>
-            </div>
-
-            <div className={styles.optionsRow}>
-              <div className={styles.rememberMe}>
-                <input 
-                  type="checkbox" 
-                  id="remember"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
-                />
-                <label htmlFor="remember">Remember me</label>
-              </div>
-              <a href="#" className={styles.forgotPassword}>Forgot password?</a>
-            </div>
-
-            <button type="submit" className={styles.loginButton}>
-              <span>Login</span>
-              <ArrowRight className={styles.arrowIcon} size={24} />
-            </button>
-
-            <p className={styles.signupText}>
-              Don't have an account? <a href="SignUp.html">Sign up</a>
-            </p>
-          </form>
-        </div>
-
-        <div className={styles.infoPanel}>
-          <div className={styles.overlay}></div>
-          <div className={styles.content}>
-            <div className={styles.infoCard}>
-              <h2>Warehouse Logistics Management</h2>
-              <p>Optimize inventory, streamline operations, and boost productivity with our powerful platform.</p>
-
-              <div className={styles.benefitsContainer}>
-                <div className={styles.benefitItem}>
-                  <div className={styles.benefitIcon}>
-                    <Heart size={18} />
-                  </div>
-                  <span>Real-time inventory tracking</span>
-                </div>
-
-                <div className={styles.benefitItem}>
-                  <div className={styles.benefitIcon}>
-                    <CheckCircle size={18} />
-                  </div>
-                  <span>Automated order processing</span>
-                </div>
-
-                <div className={styles.benefitItem}>
-                  <div className={styles.benefitIcon}>
-                    <TrendingUp size={18} />
-                  </div>
-                  <span>Analytics and reporting</span>
-                </div>
-
-                <div className={styles.benefitItem}>
-                  <div className={styles.benefitIcon}>
-                    <Smartphone size={18} />
-                  </div>
-                  <span>Mobile accessibility</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
     </div>
   );
 };
