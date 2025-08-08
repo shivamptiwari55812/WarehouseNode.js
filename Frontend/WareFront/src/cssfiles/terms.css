@@ -44,10 +44,11 @@
 }
 
 .company-name {
-  font-size: 22px;
+  font-size: 30px;
   font-weight: 700;
   margin: 0;
   color: #0A2342;
+  text-decoration: none;
 }
 
 .highlight {
