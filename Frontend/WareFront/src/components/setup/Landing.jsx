@@ -26,8 +26,8 @@ const handleLogin = () => {
  navigate('/Login');
 };
 
-const handleRegister = () => {
-console.log('Navigate to register page');
+const handleSignUp = () => {
+navigate('/SignUp');
 };
 
 return (
@@ -113,9 +113,10 @@ return (
                 Transforming manual warehouse operations into streamlined digital processes.
                 Optimize inventory, track shipments, and improve efficiency with our advanced solution.
               </p>
+            
 
               <div className="hero-actions animate-fade-in" style={{ animationDelay: '0.6s' }}>
-                <button onClick={handleRegister} className="register-btn">
+                <button onClick={handleSignUp} className="register-btn">
                   Register
                 </button>
               </div>
@@ -336,8 +337,8 @@ return (
                 © 2025 Total Group. All rights reserved.
               </p>
               <div className="footer-legal">
-                <a href="#" className="legal-link">Privacy Policy</a>
-                <a href="#" className="legal-link">Terms of Service</a>
+                <a href="\PrivacyPolicy" className="legal-link">Privacy Policy</a>
+                <a href="\TermsOfService" className="legal-link">Terms of Service</a>
                 <a href="#" className="legal-link">Sitemap</a>
               </div>
             </div>
