@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 router.post('/SignUpview',registration)
-router.post("/verifyOTP",verifyOTP)
+router.post("/verify",verifyOTP)
 router.post("/Login",Login)
 
 

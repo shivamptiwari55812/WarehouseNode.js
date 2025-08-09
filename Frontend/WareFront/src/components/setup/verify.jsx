@@ -9,6 +9,7 @@ const verify = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true)
 
     if (otp.length !== 6) {
       alert("Please enter a complete 6-digit OTP code.");
@@ -27,18 +28,21 @@ const verify = () => {
     });
     const result = await response.json();
     
-    if (result.ok) {
+    if (response.ok) {
      
       console.log(result);
-      navigate("/SignUp");
+      navigate("/Dashboard");
     }
     else{
       alert("Something went wrong")
     }
   }
   catch(err){
-    setIsLoading(true)
+    
     console.log("Shivam");
+  }
+  finally{
+    setIsLoading(false)
   }
 
     

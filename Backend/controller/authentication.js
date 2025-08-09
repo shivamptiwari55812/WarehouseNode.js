@@ -69,22 +69,31 @@ export const registration = async (req, res) => {
 
 export const verifyOTP = async (req, res) => {
   try {
-    if (!req.body.otp) {
-      return res.status(403).json({ message: "Please Enter the OTP" });
+    const { otp } = req.body;
+    if (!otp) {
+      return res.status(400).json({ message: "Please enter the OTP" });
     }
-    console.log(req.body)
 
-    const existingUser = await otpDB.findOne({ otp: req.body.otp });
-    if (!existingUser) {
+    const existingOtp = await otpDB.findOne({ otp });
+    if (!existingOtp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
-    const newUser = await newUser1.findOne({ _id: existingUser.userId });
-    newUser.isVerified = true;
-    const user = await newUser.save();
-    res.status(200).json({ message: "User Created Successfully", user });
+
+    const userDoc = await newUser1.findOne({ _id: existingOtp.userId });
+    if (!userDoc) {
+      return res.status(404).json({ message: "User not found for this OTP" });
+    }
+
+    userDoc.isVerified = true;
+    const savedUser = await userDoc.save();
+
+    // Remove OTP so it can't be reused
+    await otpDB.deleteOne({ _id: existingOtp._id });
+
+    res.status(200).json({ message: "User verified successfully", user: savedUser });
   } catch (err) {
-    console.log("Error:-" + err.message);
-    return res.status(500).json({ message: `${err.message}` });
+    console.error("Error verifying OTP:", err);
+    return res.status(500).json({ message: err.message });
   }
 };
 
