@@ -5,7 +5,7 @@ import { registration, verifyOTP, Login } from '../controller/authentication.js'
 const router = express.Router();
 
 
-router.post('/registeration',registration)
+router.post('/SignUpview',registration)
 router.post("/verifyOTP",verifyOTP)
 router.post("/Login",Login)
 

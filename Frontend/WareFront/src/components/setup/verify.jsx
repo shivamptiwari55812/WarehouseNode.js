@@ -1,29 +1,51 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import  '../../cssfiles/verify.css';
-import  '../../cssfiles/OTPSingleInput.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../../cssfiles/verify.css";
+import "../../cssfiles/OTPSingleInput.css";
 const verify = () => {
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (otp.length !== 6) {
       alert("Please enter a complete 6-digit OTP code.");
       return;
     }
+    const payload = {
+      otp,
+      email: localStorage.getItem("email"),
+    };
+    console.log(payload)
+    try{
+    const response = await fetch("http://localhost:5050/api/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const result = await response.json();
+    
+    if (result.ok) {
+     
+      console.log(result);
+      navigate("/SignUp");
+    }
+    else{
+      alert("Something went wrong")
+    }
+  }
+  catch(err){
+    setIsLoading(true)
+    console.log("Shivam");
+  }
 
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      alert("OTP verified successfully.");
-    }, 2000);
+    
   };
 
   const handleResendOTP = () => {
-    alert("A new OTP has been sent to your phone.");
+    alert("A new OTP has been sent to your Device.");
   };
 
   return (
@@ -41,7 +63,8 @@ const verify = () => {
         <div className="otp-content">
           <h2 className="otp-title">Enter Verification Code</h2>
           <p className="otp-subtitle">
-            We've sent a 6-digit verification code to your registered phone number
+            We've sent a 6-digit verification code to your registered phone
+            number
           </p>
 
           <form onSubmit={handleSubmit} className="otp-form">
@@ -51,23 +74,26 @@ const verify = () => {
                 maxLength={6}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                className="otp-single-input" />
+                className="otp-single-input"
+              />
             </div>
 
             <button
               type="submit"
               className="otp-verify-button"
-              disabled={isLoading || otp.length !== 6}>
-              {isLoading ? 'Verifying...' : 'Verify OTP'}
+              disabled={isLoading || otp.length !== 6}
+            >
+              {isLoading ? "Verifying..." : "Verify OTP"}
             </button>
 
             <div className="otp-actions">
               <p className="otp-resend-text">
-                Didn't receive the code?{' '}
+                Didn't receive the code?{" "}
                 <button
                   type="button"
                   className="otp-resend-link"
-                  onClick={handleResendOTP}>
+                  onClick={handleResendOTP}
+                >
                   Resend OTP
                 </button>
               </p>
@@ -75,7 +101,8 @@ const verify = () => {
               <button
                 type="button"
                 className="otp-back-link"
-                onClick={() => navigate("/SignUp")}>
+                onClick={() => navigate("/SignUp")}
+              >
                 ← Back to Sign Up
               </button>
             </div>

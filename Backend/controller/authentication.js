@@ -30,6 +30,8 @@ const saltround = 10;
 export const registration = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+
+    console.log(req.body)
     if (!name || !email || !password) {
       return res.status(403).json({ message: "All fields are required" });
     }
@@ -70,6 +72,7 @@ export const verifyOTP = async (req, res) => {
     if (!req.body.otp) {
       return res.status(403).json({ message: "Please Enter the OTP" });
     }
+    console.log(req.body)
 
     const existingUser = await otpDB.findOne({ otp: req.body.otp });
     if (!existingUser) {
