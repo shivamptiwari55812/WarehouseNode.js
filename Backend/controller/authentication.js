@@ -1,6 +1,9 @@
 import {Authentication,newUser1,otpDB} from "../model/authentication.js";
 import bcrypt from "bcrypt";
-
+import jwt from "jsonwebtoken";
+import {transporter,sendEmail} from "../Utilities&MiddleWare/email.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 //Basic Login 
 export const Login = async () => {
@@ -37,9 +40,19 @@ export const registration = async (req, res) => {
     }
 
     const existingUser = await newUser1.findOne({ email:email });
-    if (existingUser){
-      return res.status(400).json({ message: "User already exists" });
-    }
+    
+if (existingUser) {
+  if (existingUser.isVerified) {
+    return res.status(400).json({ message: "User already exists" });
+  } else {
+    
+    const otp = OtpGenerator();
+    await otpDB.updateOne({ userId: existingUser._id }, { otp });
+    await sendEmail(req.body.email,`Verification Email `,`Dear ${req.body.name} \n Thank you for choosing us! Here is the Verification code \n
+      OTP :- ${otp}\n Best regards\nTechnical Team\n TG`);
+    return res.status(200).json({ message: "OTP resent" });
+  }
+}
     let otp = OtpGenerator()
     const hashedPassword = await bcrypt.hash(req.body.password, saltround);
 
@@ -54,6 +67,9 @@ export const registration = async (req, res) => {
       otp:otp,
       
     })
+   await sendEmail(req.body.email,`Verification Email `,`Dear ${req.body.name} \n Thank you for choosing us! Here is the Verification code \n
+      OTP :- ${otp}\n Best regards\nTechnical Team\n TG`);
+   
 
     return res.status(200).json({ "Here is the OTP ": otp });
   } catch (err) {
@@ -105,5 +121,4 @@ const OtpGenerator = () => {
   console.log(otp);
   return otp;
 };
-
 

@@ -23,11 +23,13 @@ const newUser = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+        
     },
     email: {
         type: String,
         required: true,
         match: [/.+\@.+\..+/, "Please enter a valid email address"],
+        unique:true,
     },
     password: {
         type: String,

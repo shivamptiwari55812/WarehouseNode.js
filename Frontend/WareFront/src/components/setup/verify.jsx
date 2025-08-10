@@ -31,10 +31,11 @@ const verify = () => {
     if (response.ok) {
      
       console.log(result);
+      // localStorage.setItem("token")
       navigate("/Dashboard");
     }
     else{
-      alert("Something went wrong")
+      alert("You have entered a wrong OTP")
     }
   }
   catch(err){
