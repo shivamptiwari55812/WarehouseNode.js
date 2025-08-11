@@ -11,17 +11,35 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const payload ={
+    password:password,
+    email:email,
+
+  }
+  const handleSubmit = async(e) => {
     e.preventDefault();
+try{
+    const response = await fetch("http://localhost:5050/api/Login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+      if(response.ok){
+        console.log("Okay from server Side")   
+      }
+      else{
+        console.log(err.message)
+      }
+    }catch(err){
+      console.log(err.message)
+    }
     setLoading(true);
     console.log('Login attempt:', { email, password, remember });
 
     
-    setTimeout(() => {
-      setLoading(false);
-      setStatus('Login successful!');
-      navigate('/dashboard');
-    }, 1500);
+    
   };
 
   return (

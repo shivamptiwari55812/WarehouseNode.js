@@ -8,11 +8,13 @@ dotenv.config();
 //Basic Login 
 export const Login = async () => {
   try {
-    if(!req.body.username || !req.body.password){
+
+    if(!req.body.email || !req.body.password){
       return res.status(400).json({message:"Please Provide both credentials!"})
     }
 
-    const User = await Authentication.findOne({username:name})
+    
+    const User = await Authentication.findOne({email:email})
     if(!User){
       return res.status(400).json({message:"User not Found!"})
     }
@@ -25,8 +27,8 @@ export const Login = async () => {
   }
 };
 
-const saltround = 10;
 
+const saltround = 10;
 
 //registration ka code 
 
