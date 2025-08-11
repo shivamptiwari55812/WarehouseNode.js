@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { useNavigate, Link } from "react-router-dom";
 import { ArrowRight, Heart, CheckCircle, TrendingUp, Smartphone } from 'lucide-react';
 import styles from '../../cssfiles/Login.module.css';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setemail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
   const [status, setStatus] = useState('');
@@ -16,7 +17,7 @@ const Login = () => {
   }
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log('Login attempt:', { username, password, remember });
+    console.log('Login attempt:', { email, password, remember });
 try{
     const response = await fetch("http://localhost:5050/api/Login", {
         method: "POST",
@@ -63,16 +64,16 @@ try{
 
           <form id="loginForm" onSubmit={handleSubmit}>
             <div className={styles.formGroup}>
-              <label htmlFor="username">Username</label>
+              <label htmlFor="username">Email</label>
               <div className={styles.inputContainer}>
                 <input 
                   type="text" 
-                  id="username" 
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your Username"
+                  id="email" 
+                  value={email}
+                  onChange={(e) => setemail(e.target.value)}
+                  placeholder="Enter your Email"
                 />
-                <span className={styles.error} id="usernameError"></span>
+                <span className={styles.error} id="emailerror"></span>
               </div>
             </div>
 
