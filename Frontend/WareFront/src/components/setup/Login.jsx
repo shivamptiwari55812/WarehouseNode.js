@@ -17,7 +17,7 @@ const Login = () => {
   }
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password, remember });
+    
 try{
     const response = await fetch("http://localhost:5050/api/Login", {
         method: "POST",
@@ -27,10 +27,14 @@ try{
 
       const result = await response.json();
       if(response.ok){
-        console.log("Okay from server Side")   
+
+        
+       localStorage.setItem("token",result.token)
+        navigate("/Dashboard") 
+       
       }
       else{
-        console.log(err.message)
+        console.log("message")
       }
     }catch(err){
       console.log(err.message)

@@ -1,75 +1,163 @@
-import {useState} from "react"
-import{useNavigate} from "react-router-dom"
-import "../../cssfiles/inbound1.css"
-export function AddCompany(){
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+export const AddCompany = () => {
+  const [formData, setFormData] = useState({
+    CompanyName: "",
+    CompanyAddress: "",
+    CompanyPhone: "",
+    CompanyEmail: "",
+    warehouse: ""
+  });
 
-const handleSubmit = async()=>{
-    const navigate = useNavigate()
-    const [companyName ,useCompanyName] = useState("")
-    const [companyEmail,setCompanyEmail]=useState("")
-    const [companyAddress,setCompanyAddress] =useState("")
-    const [companyDocuments,setCompanyDocuments]=useState("")
-    const [companyPhone,setCompanyPhone]=useState("")
-    const [companyGSTIN ,setCompanyGSTIN] = useState("")
+  const [companyDocument, setCompanyDocument] = useState(null);
+  const navigate = useNavigate();
 
-    const data ={
-        companyName:document.getElementById("companyName").value,
-        companyEmail:document.getElementById("companyEmail").value,
-        companyAddress:document.getElementById("companyAddress").value,
-        companyDocuments:document.getElementById("companyDocuments").files[0],
-        companyPhone:document.getElementById("companyPhone").value
-    }
-        const response = await fetch("https://localhost:7000/api/scores", {
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleFileChange = (e) => {
+    setCompanyDocument(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const data = new FormData();
+      data.append("CompanyName", formData.CompanyName);
+      data.append("CompanyAddress", formData.CompanyAddress);
+      data.append("CompanyPhone", formData.CompanyPhone);
+      data.append("CompanyEmail", formData.CompanyEmail);
+      data.append("GSTIN", formData.GSTIN);
+      data.append("CompanyDocuments", companyDocument);
+
+      const response = await fetch("http://localhost:5050/api/CompanyView", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: data
+        body: data,
       });
-      const result = response.json();
-      if(result.ok){
-        navigate("/Dashboard")
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log(result.message);
+        navigate("/Dashboard");
+      } else {
+        console.log(result.message || "Something went wrong");
       }
-        }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
-    return(
+  return (
+    <>
+      <form className="company-form" onSubmit={handleSubmit}>
+        <h2>Inbound Company Registration</h2>
 
-        
+        <label>Company Name</label>
+        <input
+          type="text"
+          name="CompanyName"
+          value={formData.CompanyName}
+          onChange={handleChange}
+          required
+        />
 
+        <label>Company Address</label>
+        <textarea
+          name="CompanyAddress"
+          value={formData.CompanyAddress}
+          onChange={handleChange}
+          required
+        ></textarea>
 
-        <>
-        <div className="outerdivform">
-        <form action="" className="formCompanyRegistration" >
-            <h1>Enter the Details to Register in Database</h1>
-            <div className="formRows">
-                <label htmlFor="companyName" >Company Name</label>
-                <input type="text" id="companyName" value={companyName} onChange={(e)=>setCompanyName(e.target.value)} placeholder="Enter the name " required="true"/>    
-            </div>
-             <div className="formRows">
-                <label htmlFor="companyAddress">Company Address</label>
-                <input type="text" id="companyAddress" value={companyAddress} onChange={(e)=>setCompanyAddress(e.target.value)} placeholder="Address of the company" required="true"/>    
-            </div>
-             <div className="formRows">
-                <label htmlFor="companyEmail">Company Email</label>
-                <input type="email" id="companyEmail" value={companyEmail} onChange={(e)=>setCompanyEmail(e.target.value)} placeholder="Email of the company" required="true"/>    
-            </div>
-             <div className="formRows">
-                <label htmlFor="companyDocuments">Company Documents PDF</label>
-                <input type="file" id="companyDocuments" placeholder="Attach the Documents Required" required="true"/>    
-            </div>
-             <div className="formRows">
-                <label htmlFor="companyPhone">Company's Phone</label>
-                <input type="phone" id="companyPhone" placeholder="Phone Number of the Company" required="true"/>    
-            </div>
-            <div className="formRows">
-                <label htmlFor="GSTIN">Company's GSTIN</label>
-                <input type="number" id="GSTIN" placeholder="GSTIN Number of the Company" required="true"/>    
-            </div>
-             
-            <button className="submitbtn">Save Details</button>
-        </form>
-        </div>
-        </>
-    )
-}
+        <label>Company Phone</label>
+        <input
+          type="text"
+          name="CompanyPhone"
+          value={formData.CompanyPhone}
+          pattern="\d{10}"
+          title="Please enter a valid 10-digit phone number"
+          onChange={handleChange}
+          required
+        />
+
+        <label>Company Email</label>
+        <input
+          type="email"
+          name="CompanyEmail"
+          value={formData.CompanyEmail}
+          onChange={handleChange}
+          required
+        />
+
+        <label>Company Documents</label>
+        <input
+          type="file"
+          name="CompanyDocuments"
+          onChange={handleFileChange}
+          required
+        />
+
+        <label>GSTIN</label>
+        <input
+          type="text"
+          name="GSTIN"
+          value={formData.warehouse}
+          onChange={handleChange}
+          required
+        />
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <style>
+        {`
+          .company-form {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f9f9f9;
+            font-family: Arial, sans-serif;
+          }
+          .company-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+          }
+          .company-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+          }
+          .company-form input,
+          .company-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          }
+          .company-form button {
+            width: 100%;
+            padding: 10px;
+            background: orangered;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+          }
+          .company-form button:hover {
+            background: #df4019ff;
+          }
+        `}
+      </style>
+    </>
+  );
+};

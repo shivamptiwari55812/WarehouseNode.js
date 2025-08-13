@@ -7,6 +7,11 @@ const authentication = new mongoose.Schema({
         ref: "newUser1",
         required: true,
     },
+    email:{
+        type:String,
+        required:true,
+
+    },
     name: {
           type: String,
           required: true,
