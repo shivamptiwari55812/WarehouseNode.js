@@ -1,4 +1,11 @@
+::-webkit-scrollbar {
+  display: none;
+}
 
+/* Works for Firefox */
+html, body {
+  scrollbar-width: none;
+}
     :root {
       --brand-orange: #F56416;
       --brand-orange-light: #ff8f49;

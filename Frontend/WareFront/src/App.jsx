@@ -13,11 +13,21 @@ import {Roles} from "./components/setup/SltRole.jsx"
 import { AddCompany } from './components/setup/addCompany.jsx'
 import {WarehouseDetails} from "./components/Warehouse/setWarehouse.jsx"
 import { Orderplacement } from './components/inbound/OrderPlacement.jsx'
+import OrderManagement from './components/inbound/OrderManagement.jsx'
 function DashboardLayout(){
   return(
     <>
     <Header1/>
     <Dashboard/>
+    </>
+  )
+}
+
+function OrderManagement1(){
+  return(
+    <>
+    <Header1/>
+    <OrderManagement/>
     </>
   )
 }
@@ -92,6 +102,10 @@ const router = createBrowserRouter([
   {
     path:"/inboundCompanyDetails",
     element:<AddCompany1/>
+  },
+  {
+    path:"/orderManagement",
+    element:<OrderManagement1/>
   },
   {
     path:'/warehouseDetails',

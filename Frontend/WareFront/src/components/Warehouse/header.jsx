@@ -17,7 +17,7 @@ export function Header1(){
         <>
         <nav>
 
-          <div id="header-nav">
+          <div id="header-nav" style={{position:"fixed",width:"100%",zIndex:"1",top:"0",left:"0"}}>
     <div className="dashboard-header-bar">
       <div className="header-left">
         <span className="logo">TG</span>
