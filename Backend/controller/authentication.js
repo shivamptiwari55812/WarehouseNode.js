@@ -82,6 +82,7 @@ export const registration = async (req, res) => {
       `Dear ${req.body.name} \n Thank you for choosing us! Here is the Verification code \n
       OTP :- ${otp}\n Best regards\nTechnical Team\n TG`
     );
+    console.log(otp);
 
     return res.status(200).json({ "Here is the OTP ": otp });
   } catch (err) {

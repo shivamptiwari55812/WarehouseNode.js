@@ -27,6 +27,11 @@ const outboundCompany = new mongoose.Schema({
     type:String ,
     required :true,
   },
+  status:{
+    type:String,
+    required:true,
+    default:false,
+  },
   warehouse: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "warehouseModel",

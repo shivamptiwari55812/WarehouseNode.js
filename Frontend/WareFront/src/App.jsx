@@ -116,6 +116,7 @@ const router = createBrowserRouter([
 function App() {
   
   const [count, setCount] = useState(0)
+  localStorage.getItem("token")
 
   return (
     

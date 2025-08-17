@@ -5,14 +5,16 @@ import "../../cssfiles/header.css"
 export function Header1(){
  
   
+const navigate = useNavigate();
 
+localStorage.getItem("token")
 
-
-
-
-
-
-
+const locateOrder=()=>{
+  navigate("/orderManagement")
+}
+const locateToDashboard= ()=>{
+  navigate("/Dashboard")
+}
     return(
         <>
         <nav>
@@ -25,7 +27,7 @@ export function Header1(){
       </div>
       <div className="header-right">
         <span className="admin-name">Administrator</span>
-        <button className="logout-button" onClick="location.href='logout.html'">
+        <button className="logout-button" >
           <i className="fa fa-sign-out"></i> Logout
         </button>
       </div>
@@ -35,17 +37,14 @@ export function Header1(){
       <span className="dashboard-overview-title">Dashboard Overview</span>
       <div className="navbar">
           <div className="dropdown">
-            <button className="dropbtn">Orders 
-              <i className="fa fa-caret-down"></i>
+            <button className="dropbtn" onClick={locateOrder} onDoubleClick={locateToDashboard}>Orders 
+              
             </button>
-            <div className="dropdown-content">
-              <a href="orderOut2Page.html">Inbound</a>
-              <a href="orderplacement.html">Outbound</a>
-            </div>
+            
           </div>
         
           <div className="dropdown">
-            <button className="dropbtn">Shipments 
+            <button className="dropbtn" onDoubleClick={locateToDashboard}>Shipments 
               <i className="fa fa-caret-down"></i>
             </button>
             <div className="dropdown-content">
@@ -55,7 +54,7 @@ export function Header1(){
           </div>
         
           <div className="dropdown">
-            <button className="dropbtn">Inventory 
+            <button className="dropbtn" onDoubleClick={locateToDashboard}>Inventory 
               <i className="fa fa-caret-down"></i>
             </button>
             <div className="dropdown-content">

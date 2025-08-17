@@ -7,7 +7,8 @@ export const AddCompany = () => {
     CompanyAddress: "",
     CompanyPhone: "",
     CompanyEmail: "",
-    warehouse: ""
+    
+
   });
 
   const [companyDocument, setCompanyDocument] = useState(null);
