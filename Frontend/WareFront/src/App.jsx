@@ -14,6 +14,7 @@ import { AddCompany } from './components/setup/addCompany.jsx'
 import {WarehouseDetails} from "./components/Warehouse/setWarehouse.jsx"
 import { Orderplacement } from './components/inbound/OrderPlacement.jsx'
 import OrderManagement from './components/inbound/OrderManagement.jsx'
+import InventoryManagement from './components/Warehouse/InventoryManagement.jsx'
 function DashboardLayout(){
   return(
     <>
@@ -23,6 +24,14 @@ function DashboardLayout(){
   )
 }
 
+function InventoryManagement1(){
+  return(
+    <>
+    <Header1/>
+    <InventoryManagement/>
+    </>
+  )
+}
 function OrderManagement1(){
   return(
     <>
@@ -62,6 +71,10 @@ const router = createBrowserRouter([
   {
     path:"/Dashboard",
     element: <DashboardLayout/>
+  },
+  {
+    path:"/InventoryManagement",
+    element: <InventoryManagement1/>
   },
    {
     path:"/",

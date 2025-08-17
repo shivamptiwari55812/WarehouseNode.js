@@ -9,8 +9,17 @@ const navigate = useNavigate();
 
 localStorage.getItem("token")
 
+function logout (){
+  if(localStorage.getItem("token") != null){
+    localStorage.removeItem("token")
+  }
+  navigate("/Login")
+}
 const locateOrder=()=>{
   navigate("/orderManagement")
+}
+const locateInventory=()=>{
+  navigate("/InventoryManagement")
 }
 const locateToDashboard= ()=>{
   navigate("/Dashboard")
@@ -27,7 +36,7 @@ const locateToDashboard= ()=>{
       </div>
       <div className="header-right">
         <span className="admin-name">Administrator</span>
-        <button className="logout-button" >
+        <button className="logout-button" onClick={logout} >
           <i className="fa fa-sign-out"></i> Logout
         </button>
       </div>
@@ -54,14 +63,10 @@ const locateToDashboard= ()=>{
           </div>
         
           <div className="dropdown">
-            <button className="dropbtn" onDoubleClick={locateToDashboard}>Inventory 
-              <i className="fa fa-caret-down"></i>
+            <button className="dropbtn" onDoubleClick={locateToDashboard} onClick={locateInventory}>Inventory 
+              
             </button>
-            <div className="dropdown-content">
-              <a href="tableforInv.html">Edit</a>
-              <a href="addProduct.html">Add Product</a>
-              <a href="statusInv.html">Alert!</a>
-            </div>
+            
           </div> 
           <div className="dropdown">
             <button className="dropbtn">Warehouse 
