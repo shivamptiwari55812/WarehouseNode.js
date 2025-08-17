@@ -141,19 +141,25 @@
     }
     .table-responsive {
       overflow-x: auto;
-      display: block;
       width: 100%;
+      -webkit-overflow-scrolling: touch;
     }
     .orders-table {
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
+      min-width: 600px;
     }
     .orders-table th,
     .orders-table td {
       padding: 12px 15px;
       text-align: left;
-      word-wrap: break-word;
+      white-space: nowrap; 
+    }
+    .orders-table th.date,
+    .orders-table td.date {
+      min-width: 180px; 
+      white-space: nowrap; 
     }
     .orders-table th {
       background-color: var(--brand-lightgray);
@@ -194,7 +200,7 @@
       }
     }
     @media (max-width: 768px) {
-      .main-content { padding: 16px; }
+      .main-content { padding: 16px; margin-top: 180px; }
       .dashboard-header-bar { flex-direction: column; align-items: flex-start; height: auto; padding: 12px; }
       .header-right { margin-top: 8px; }
       .dashboard-overview-title { font-size: 18px; }
