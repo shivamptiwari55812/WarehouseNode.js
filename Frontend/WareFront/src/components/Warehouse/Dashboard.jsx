@@ -1,16 +1,5 @@
-import { useState } from 'react'
+import { useState , useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
-
-export function Dashboard(){
-    console.log(localStorage.getItem('token'))
-    
-    return(
-        <>
-        <h1>Dashboard Page</h1>
-        </>
-    )
-}
-import React, { useEffect, useState } from "react";
 import "../../cssfiles/Dashboard.css"; 
 import {
   Chart,
@@ -24,7 +13,10 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 
 Chart.register(ArcElement, Tooltip, Legend, Title, PieController, ChartDataLabels);
 
-const Dashboard = () => {
+
+
+
+export function Dashboard ()  {
   const [summary, setSummary] = useState({});
   const [status, setStatus] = useState({});
   const [orders, setOrders] = useState([]);
@@ -191,4 +183,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+

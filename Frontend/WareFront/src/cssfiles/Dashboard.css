@@ -186,6 +186,10 @@
         gap: 10px;
         padding: 0 16px;
       }
+      
+      .dashboard-container{
+        padding-top:10vh;
+      }
       .dashboard-overview-title {
         margin-bottom: 8px;
       }
@@ -194,6 +198,7 @@
       }
     }
     @media (max-width: 768px) {
+      .dashboard-container{padding-top:18vh;}
       .main-content { padding: 16px; }
       .dashboard-header-bar { flex-direction: column; align-items: flex-start; height: auto; padding: 12px; }
       .header-right { margin-top: 8px; }

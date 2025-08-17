@@ -7,7 +7,7 @@ import SignUp from './components/setup/SignUp.jsx'
 import Verify from './components/setup/verify.jsx'
 import PrivacyPolicy from './components/setup/PrivacyPolicy';
 import TermsOfService from './components/setup/TermsOfService';
-import Dashboard from "./components/Warehouse/Dashboard.jsx"
+import {Dashboard} from "./components/Warehouse/Dashboard.jsx"
 import { Header1 } from './components/Warehouse/header.jsx'
 import {Roles} from "./components/setup/SltRole.jsx"
 import { AddCompany } from './components/setup/addCompany.jsx'
