@@ -49,8 +49,23 @@ const verify = () => {
     
   };
 
-  const handleResendOTP = () => {
-    alert("A new OTP has been sent to your Device.");
+  const handleResendOTP = async () => {
+    try {
+      const email = localStorage.getItem("email");
+      const response = await fetch("http://localhost:5050/api/resend-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (response.ok) {
+        alert("A new OTP has been sent to your email.");
+      } else {
+        alert("Failed to resend OTP.");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Something went wrong.");
+    }
   };
 
   return (
@@ -68,8 +83,7 @@ const verify = () => {
         <div className="otp-content">
           <h2 className="otp-title">Enter Verification Code</h2>
           <p className="otp-subtitle">
-            We've sent a 6-digit verification code to your registered phone
-            number
+            We've sent a 6-digit verification code to your registered email
           </p>
 
           <form onSubmit={handleSubmit} className="otp-form">

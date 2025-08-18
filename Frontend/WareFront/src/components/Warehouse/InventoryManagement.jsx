@@ -51,16 +51,18 @@ const InventoryManagement = () => {
 
   // Add new product to backend
   const addProduct = async (productData) => {
+    console.log("Sending product:", productData);
+
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/products`, {
+      const response = await fetch(`http://localhost:5050/api/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(productData)
       });
-      
+    
       if (!response.ok) throw new Error('Failed to add product');
       const newProduct = await response.json();
       setProducts(prev => [...prev, newProduct]);
@@ -123,7 +125,7 @@ const InventoryManagement = () => {
   // Update stock quantity
   const updateStock = async (productId, newStock) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/products/${productId}/stock`, {
+      const response = await fetch(`http://localhost:5050/api/products/${productId}/stock`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

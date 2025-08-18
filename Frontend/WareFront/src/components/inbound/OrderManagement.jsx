@@ -113,6 +113,13 @@ const OrderManagement = () => {
     },
   ];
 
+
+  const handleProductDetails =async(e)=>{
+    e.preventDefault();
+    setLoading(true)
+  }
+
+
   const filteredCompanies = companies.filter(
     (company) =>
       company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
