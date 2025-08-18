@@ -1,0 +1,139 @@
+
+.bills-table-wrapper {
+  margin-top: 1.5rem;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+.bills-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.bills-table thead {
+  background-color: #f1f5f9;
+  text-align: left;
+}
+
+.bills-table th,
+.bills-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.bills-table th {
+  font-weight: 600;
+  color: #334155;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.bills-table tr:hover {
+  background-color: #f9fafb;
+}
+
+.badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+}
+
+.badge.paid {
+  background-color: #16a34a;
+}
+
+.badge.pending {
+  background-color: #f59e0b;
+}
+
+.badge.overdue {
+  background-color: #dc2626;
+}
+
+.bills-table button {
+  margin-right: 0.5rem;
+  padding: 0.35rem 0.65rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: #e2e8f0;
+  color: #1e293b;
+  transition: background 0.2s;
+}
+
+.bills-table button:hover {
+  background: #cbd5e1;
+}
+
+.bills-table button:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.bills-table button:last-child {
+  background: #f87171;
+  color: white;
+}
+
+.bills-table button:last-child:hover {
+  background: #ef4444;
+}
+
+.no-bills {
+  text-align: center;
+  padding: 1rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.loading-table {
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.pagination p {
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.pagination div {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.pagination button {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.pagination button.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.pagination button:hover:not(.active) {
+  background: #f1f5f9;
+}
