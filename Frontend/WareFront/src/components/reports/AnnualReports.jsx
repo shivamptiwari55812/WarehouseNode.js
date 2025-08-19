@@ -7,6 +7,11 @@ import "../../cssfiles/AnnualReports.css";
 export default function AnnualReports() {
   const { data: reports, isLoading } = useQuery({
     queryKey: ["/api/annual-reports"],
+    queryFn: async () => {
+     const response = await fetch("/api/annual-reports");
+      if (!response.ok) throw new Error("Failed to fetch annual reports");
+      return response.json();
+  },
   });
 
   const summaryStats = reports
@@ -27,6 +32,31 @@ export default function AnnualReports() {
           ) / reports.length,
       }
     : null;
+  
+  const exportTableToCSV = () => {
+  if (!reports) return;
+
+  const headers = ["Month", "Revenue", "Orders", "Items Shipped", "Growth"];
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  const rows = reports.map(report => [
+    monthNames[report.month - 1],
+    report.revenue,
+    report.orders,
+    report.itemsShipped,
+    report.growthRate + "%"
+  ]);
+
+  const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "annual_reports.csv";
+  link.click();
+};
 
   return (
     <div className="annual-reports-container" data-testid="annual-reports-view">
@@ -39,7 +69,7 @@ export default function AnnualReports() {
               <option value="2023">2023</option>
               <option value="2022">2022</option>
             </select>
-            <button data-testid="export-button">⬇ Export</button>
+            <button data-testid="export-button" onClick={exportTableToCSV}>⬇ Export</button>
           </div>
         </div>
 
