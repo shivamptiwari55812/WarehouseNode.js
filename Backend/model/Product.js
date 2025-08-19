@@ -33,10 +33,7 @@ const productSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    description:{
-        type: String,
-        required: false,
-    },
+   
     status:{
         type:String,
         required:true,
@@ -46,10 +43,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    lastUpdated: {
-        type: String,
-        required: false,
-    },
+    
     // warehouse: {
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: "warehouseModel",
