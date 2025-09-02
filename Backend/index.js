@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./database/connectDB.js";
 import router from "./router/router.js";
+import orderManagementRouter from "./router/orderManagement.js"; 
 dotenv.config();
 connectDB();
 
@@ -16,6 +17,8 @@ app.use(cors({
 app.use(express.json());
 
 app.use("/api",router)
+app.use("/orderManagement", orderManagementRouter);
+
 
 
 const port = process.env.PORT || 5050;
