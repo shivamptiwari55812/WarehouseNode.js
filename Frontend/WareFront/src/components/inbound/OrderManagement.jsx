@@ -437,7 +437,7 @@ Generated on: ${new Date().toLocaleString()}
               <h2>Update Company Details</h2>
             </div>
 
-            <form className="update-form" onSubmit={handleSubmit}>
+            <form className="update-form" onSubmit={handleSubmitUpdate}>
               <div className="form-group">
                 <label>Company Name</label>
                 <input
