@@ -54,8 +54,10 @@ const otp = new mongoose.Schema({
     otp:{
         type:String,
         required:true,
-    }
-})
+    },
+    resendCount: { type: Number, default: 0 }  // track max resend
+}, { timestamps: true });
+
 
 
 
