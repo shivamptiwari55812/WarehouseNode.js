@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Search,
   Plus,
@@ -20,102 +20,36 @@ const OrderManagement = () => {
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [orderProducts, setOrderProducts] = useState([]);
   const [generatePDF, setGeneratePDF] = useState(false);
+  const [companies, setCompanies] = useState([]);
+  const [products, setProducts] = useState([]);
 
-  const companies = [
-    {
-      id: "C001",
-      name: "TechCorp Solutions",
-      email: "orders@techcorp.com",
-      phone: "+1-555-0123",
-      address: "123 Tech Street, Silicon Valley, CA 94000",
-      contact: "John Smith",
-      type: "Technology",
-      status: "Inactive",
-    },
-    {
-      id: "C002",
-      name: "Global Retail Inc",
-      email: "procurement@globalretail.com",
-      phone: "+1-555-0456",
-      address: "456 Commerce Ave, New York, NY 10001",
-      contact: "Sarah Johnson",
-      type: "Retail",
-      status: "Inactive",
-      GSTIN: "fwrfovebfgo",
-    },
-    {
-      id: "C003",
-      name: "Manufacturing Plus",
-      email: "supply@mfgplus.com",
-      phone: "+1-555-0789",
-      address: "789 Industrial Blvd, Detroit, MI 48201",
-      contact: "Mike Wilson",
-      type: "Manufacturing",
-      status: "Inactive",
-    },
-    {
-      id: "C004",
-      name: "Healthcare Systems",
-      email: "orders@healthsys.com",
-      phone: "+1-555-0321",
-      address: "321 Medical Center Dr, Boston, MA 02101",
-      contact: "Dr. Lisa Brown",
-      type: "Healthcare",
-      status: "active",
-    },
-    {
-      id: "C005",
-      name: "Food Distribution Co",
-      email: "logistics@fooddist.com",
-      phone: "+1-555-0654",
-      address: "654 Food Park Way, Chicago, IL 60601",
-      contact: "Robert Davis",
-      type: "Food & Beverage",
-      status: "active",
-    },
-  ];
-
-  const products = [
-    {
-      id: "P001",
-      name: "iPhone 15 Pro",
-      category: "Electronics",
-      price: 999.99,
-      stock: 245,
-    },
-    {
-      id: "P002",
-      name: "Samsung Galaxy S24",
-      category: "Electronics",
-      price: 899.99,
-      stock: 156,
-    },
-    {
-      id: "P003",
-      name: 'MacBook Pro 16"',
-      category: "Electronics",
-      price: 2499.99,
-      stock: 89,
-    },
-    {
-      id: "P004",
-      name: "Dell XPS 13",
-      category: "Electronics",
-      price: 1299.99,
-      stock: 134,
-    },
-    {
-      id: "P005",
-      name: 'iPad Pro 12.9"',
-      category: "Electronics",
-      price: 1099.99,
-      stock: 78,
-    },
-  ];
+ useEffect(() => {
+  const fetchCompanies = async () => {
+    try {
+      const res = await fetch("http://localhost:5050/orderManagement/companies");
+      const data = await res.json();
+      if (data.success) setCompanies(data.data);
+    } catch (err) {
+      console.error("Error fetching companies:", err);
+    }
+  };
+  fetchCompanies();
+}, []); 
 
 
-
-  
+// Fetch products from backend
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("http://localhost:5050/orderManagement/products");
+      const data = await res.json();
+      if (data.success) setProducts(data.data);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+    }
+  };
+  fetchProducts();
+}, []);
 
 
   const handleProductDetails =async(e)=>{
@@ -160,53 +94,72 @@ const OrderManagement = () => {
     setOrderProducts(newProducts);
   };
 
-  const handleSubmitOrder = (e) => {
-    e.preventDefault();
-    // Process order submission
-    console.log("Order submitted:", {
-      type: orderType,
-      company: selectedCompany,
-      products: orderProducts,
-      generatePDF,
-    });
-
-    if (generatePDF) {
-      generateOrderPDF();
-    }
-
-    setShowOrderModal(false);
-    setOrderProducts([]);
-    setGeneratePDF(false);
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const formData = new FormData(e.target); 
-
+    const payload = {
+      orderType,
+      companyId: selectedCompany._id,
+      products: orderProducts.map((p) => ({
+        productId: p.productId,
+        quantity: p.quantity,
+        notes: p.notes,
+      })),
+      generatePDF,
+    };
     try {
-      const response = await fetch("http://localhost:5050/api/UpdateCompany", {
-        method: "PUT",
-        body: formData,
+      const res = await fetch("http://localhost:5050/orderManagement/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to update company");
+      const data = await res.json();
+      if (data.success) {
+        alert("Order created successfully!");
+        setShowOrderModal(false);
+        setOrderProducts([]);
+        setGeneratePDF(false);
+      } else {
+        alert(data.message || "Error creating order");
       }
-
-      const result = await response.json();
-      console.log("Update success:", result);
-
-      alert("Company updated successfully!");
-      setShowUpdateModal(false);
-    } catch (error) {
-      console.error("Error updating company:", error);
+    } catch (err) {
+      console.error("Error submitting order:", err);
       alert("Something went wrong!");
     } finally {
       setLoading(false);
     }
   };
+
+
+  const handleSubmitUpdate = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  const formData = new FormData(e.target);
+
+  try {
+    const res = await fetch(
+      `http://localhost:5050/api/companies/${selectedCompany._id}`,
+      {
+        method: "PUT",
+        body: formData,
+      }
+    );
+    const data = await res.json();
+    if (data.success) {
+      alert("Company updated successfully!");
+      setShowUpdateModal(false);
+    } else {
+      alert(data.message || "Error updating company");
+    }
+  } catch (err) {
+    console.error("Error updating company:", err);
+    alert("Something went wrong!");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const generateOrderPDF = () => {
     const orderData = `
@@ -484,7 +437,7 @@ Generated on: ${new Date().toLocaleString()}
               <h2>Update Company Details</h2>
             </div>
 
-            <form className="update-form" onSubmit={handleSubmit}>
+            <form className="update-form" onSubmit={handleSubmitUpdate}>
               <div className="form-group">
                 <label>Company Name</label>
                 <input
