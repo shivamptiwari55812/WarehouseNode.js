@@ -1,57 +1,58 @@
+// model/Product.js
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
-    id:{
-        type:String,
-        required:true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-    category:{
-        type: String,
-        required: true,
-    },
-    price: {
-        type: Number,
-        required: true,
-    },
-    stock: {
-        type: Number,
-        required: true,
-    },
-    minStock:{
-        type:Number,
-        required:true,
-    },
-    maxStock:{
-        type:Number,
-        required:true,
-    },
-    supplier:{
-        type:String,
-        required:true,
-    },
-   
-    status:{
-        type:String,
-        required:true,
-        
-    },
-    location:{
-        type: String,
-        required: false,
-    },
-    
-    // warehouse: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "warehouseModel",
-    //     required: true,
-    // },
-    
-},{timestamps:true}
-);
+  productId: {
+    type: String,
+    required: true,
+    unique: true,
+    default: function () {
+      return "P" + Date.now().toString().slice(-6);
+    }
+  },
+  name: {
+    type: String,
+    required: [true, "Product name is required"],
+    trim: true
+  },
+  category: {
+    type: String,
+    required: [true, "Category is required"],
+    trim: true
+  },
+  price: {
+    type: Number,
+    required: [true, "Price is required"],
+    min: [0, "Price cannot be negative"]
+  },
+  stock: {
+    type: Number,
+    required: [true, "Stock quantity is required"],
+    min: [0, "Stock cannot be negative"],
+    default: 0
+  },
+  description: {
+    type: String,
+    trim: true
+  },
+  status: {
+    type: String,
+    enum: ["active", "inactive", "discontinued"],
+    default: "active"
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  }
+});
 
-const Product = mongoose.model("Product", productSchema);
-export default Product;
+productSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
+
+export default mongoose.model("Product", productSchema);
