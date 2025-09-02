@@ -1,59 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Search, Plus, Edit, Trash2, Package, AlertTriangle, Download } from 'lucide-react';
 import '../../cssfiles/InventoryManagement.css';
 
 const InventoryManagement = () => {
   // Simple state management - no complex hooks
-  const [products, setProducts] = useState([
-    {
-      id: 'P001',
-      name: 'iPhone 15 Pro',
-      category: 'Electronics',
-      stock: 245,
-      minStock: 50,
-      maxStock: 500,
-      price: 999.99,
-      supplier: 'Apple Inc.',
-      location: 'A1-B2-C3',
-      status: 'in-stock'
-    },
-    {
-      id: 'P002',
-      name: 'Samsung Galaxy S24',
-      category: 'Electronics',
-      stock: 12,
-      minStock: 20,
-      maxStock: 300,
-      price: 899.99,
-      supplier: 'Samsung Electronics',
-      location: 'A1-B2-C4',
-      status: 'low-stock'
-    },
-    {
-      id: 'P003',
-      name: 'Nike Air Max 270',
-      category: 'Footwear',
-      stock: 0,
-      minStock: 30,
-      maxStock: 400,
-      price: 150.00,
-      supplier: 'Nike Inc.',
-      location: 'B2-C1-D2',
-      status: 'out-of-stock'
-    },
-    {
-      id: 'P004',
-      name: 'Levi\'s 501 Jeans',
-      category: 'Clothing',
-      stock: 89,
-      minStock: 25,
-      maxStock: 200,
-      price: 79.99,
-      supplier: 'Levi Strauss & Co.',
-      location: 'C1-D2-E1',
-      status: 'in-stock'
-    }
-  ]);
+  const [products, setProducts] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -133,6 +84,7 @@ try{
 
     if(response.ok){
       console.log(result)
+
       alert("Product added Succesfully")
     }
     else{
@@ -148,29 +100,28 @@ try{
     resetForm();
   }
 
-  const getData = async(event)=>{
-try{
-    
-    const response = await fetch("http://localhost:5050/api/productDetails",{
-      method:"GET",
-      headers:{
-        "Content-Type":"application/json"
-      },
-    });
-    const result = await response.json();
-    if(response.ok){
-      console.log(result)
+   useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("http://localhost:5050/api/productDetails");
+      const result = await response.json();
+      console.log("API result:", result);
 
+      if (response.ok) {
+        setProducts(result.productData || []);  // 👈 grab the array
+      } else {
+        console.error("Error fetching products:", result.message);
+        setProducts([]); // fallback
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setProducts([]); // fallback
     }
-    else{
-      console.log(err)
-    }
-  }
-  catch(err){
-    console.log(err)
-  }
-  }
-  getData();
+  };
+
+  fetchProducts();
+}, []);
+
   // Edit product
   function handleEditProduct(event) {
     event.preventDefault();
@@ -206,7 +157,7 @@ try{
   async function handleDeleteProduct(productId) {
    console.log(productId)
     try{
-    const response = await fetch(`http://localhost:5050/api/deleteProduct${productId}`,{
+    const response = await fetch(`http://localhost:5050/api/deleteProduct/${productId}`,{
       method:"DELETE",
       headers:{
         "Content-Type":"application/json"
@@ -214,7 +165,7 @@ try{
     });
     if(response.ok){
  if (window.confirm('Are you sure you want to delete this product?')) {
-      const updatedProducts = products.filter(product => product.id !== productId);
+      const updatedProducts = products.filter(product => product._id !== productId);
       setProducts(updatedProducts);}
     }}
     catch(err){
@@ -504,7 +455,7 @@ try{
                 </button>
                 <button 
                   className="btn btn-danger"
-                  onClick={() => handleDeleteProduct(product.id)}
+                  onClick={() => handleDeleteProduct(product._id)}
                 >
                   <Trash2 size={16} />
                   Delete

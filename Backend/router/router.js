@@ -16,5 +16,5 @@ router.post('/annual-reports', createAnnualReport);
 
 router.post("/products",AddProduct)
 router.get("/productDetails",SendProductDetails)
-router.delete(`/deleteProduct`,DeleteProduct)
+router.delete(`/deleteProduct/:id`,DeleteProduct)
 export default router;

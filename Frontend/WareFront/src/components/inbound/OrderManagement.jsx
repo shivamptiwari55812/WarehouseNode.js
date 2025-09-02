@@ -114,6 +114,10 @@ const OrderManagement = () => {
   ];
 
 
+
+  
+
+
   const handleProductDetails =async(e)=>{
     e.preventDefault();
     setLoading(true)
@@ -182,7 +186,7 @@ const OrderManagement = () => {
     const formData = new FormData(e.target); 
 
     try {
-      const response = await fetch("http://localhost:5000/api/UpdateCompany", {
+      const response = await fetch("http://localhost:5050/api/UpdateCompany", {
         method: "PUT",
         body: formData,
       });

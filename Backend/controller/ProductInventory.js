@@ -58,21 +58,20 @@ export const SendProductDetails = async (req, res) => {
 
 export const DeleteProduct = async (req, res) => {
   try {
-    console.log(req.body);
-    const { productId } = req.body;
-    if (!productId) {
-      return res.status(403).json({ Message: "Product ID is not sent" });
+    const { id } = req.params; // take from route, not body
+    if (!id) {
+      return res.status(400).json({ message: "Product ID is required" });
     }
-    const product = await Product.findById(productId);
-    if (!DeleteProduct) {
-      return res
-        .status(403)
-        .json({ message: "No product with Given id found" });
+
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+      return res.status(404).json({ message: "No product with given ID found" });
     }
-    const deleteProduct = await Product.findOneAndDelete(product);
-    return res.status(200).json({ message: "Product deleted" });
+
+    return res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
-    console.log(error);
-    return res.json(error.message);
+    console.error(error);
+    return res.status(500).json({ message: "Server error", error: error.message });
   }
 };
