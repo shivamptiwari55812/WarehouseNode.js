@@ -2,6 +2,8 @@ import { Authentication, newUser1, otpDB } from "../model/authentication.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../Utilities&MiddleWare/jwt.js";
 import { transporter, sendEmail } from "../Utilities&MiddleWare/email.js";
+
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -130,4 +132,66 @@ const OtpGenerator = () => {
   let otp = Math.floor(100000 + Math.random() * 900000);
   console.log(otp);
   return otp;
+};
+export const resendOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email is required" });
+
+    const user = await newUser1.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (user.isVerified) return res.status(400).json({ message: "User already verified" });
+
+    let existingOtp = await otpDB.findOne({ userId: user._id });
+    const now = new Date();
+
+    // Initialize if first time
+    if (!existingOtp) {
+      existingOtp = await otpDB.create({ userId: user._id, otp: 0, resendCount: 0 });
+    }
+
+    // 30-second cooldown
+    if (existingOtp.updatedAt) {
+      const secondsSinceLastSend = (now - existingOtp.updatedAt) / 1000;
+      if (secondsSinceLastSend < 30) {
+        return res.status(429).json({ 
+          message: `Please wait ${Math.ceil(30 - secondsSinceLastSend)} seconds before resending OTP`
+        });
+      }
+    }
+
+    // Max 5 resends per hour
+    if (existingOtp.resendCount >= 5) {
+      const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+      if (existingOtp.updatedAt > oneHourAgo) {
+        return res.status(429).json({ 
+          message: "You have reached the maximum number of OTP requests. Try again later."
+        });
+      } else {
+        existingOtp.resendCount = 0; // reset after 1 hour
+      }
+    }
+
+    // Generate new OTP
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    // Update DB
+    await otpDB.updateOne(
+      { userId: user._id },
+      { otp, updatedAt: now, $inc: { resendCount: 1 } },
+      { upsert: true }
+    );
+
+    // Send OTP email
+    await sendEmail(
+      email,
+      "Verification Email",
+      `Dear ${user.name},\nYour new OTP is: ${otp}\nBest regards,\nTG Team`
+    );
+
+    res.status(200).json({ message: "OTP resent successfully" });
+  } catch (err) {
+    console.error("Error resending OTP:", err);
+    res.status(500).json({ message: "Failed to resend OTP" });
+  }
 };

@@ -1,20 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../cssfiles/verify.css";
 import "../../cssfiles/OTPSingleInput.css";
 const verify = () => {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [countdown, setCountdown] = useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let timer;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
 
     if (otp.length !== 6) {
       alert("Please enter a complete 6-digit OTP code.");
       return;
     }
+
+    setIsLoading(true);
     const payload = {
       otp,
       email: localStorage.getItem("email"),
@@ -39,8 +50,8 @@ const verify = () => {
     }
   }
   catch(err){
-    
-    console.log("Shivam");
+    console.log("Error:", err);
+      alert("Something went wrong. Please try again.");
   }
   finally{
     setIsLoading(false)
@@ -50,8 +61,14 @@ const verify = () => {
   };
 
   const handleResendOTP = async () => {
+    if (countdown > 0) return;
+    setIsResending(true);
     try {
       const email = localStorage.getItem("email");
+      if (!email) {
+        alert("Email not found. Please go back to sign up.");
+        return;
+      }
       const response = await fetch("http://localhost:5050/api/resend-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,12 +76,17 @@ const verify = () => {
       });
       if (response.ok) {
         alert("A new OTP has been sent to your email.");
+        setOtp("");
+        setCountdown(30);
       } else {
-        alert("Failed to resend OTP.");
+        const errorData = await response.json();
+        alert(errorData.message || "Failed to resend OTP. Please try again.");
       }
     } catch (err) {
-      console.log(err);
-      alert("Something went wrong.");
+      console.log("Resend error:", err);
+      alert("Something went wrong. Please try again.");
+    }finally {
+      setIsResending(false);
     }
   };
 
@@ -112,8 +134,13 @@ const verify = () => {
                   type="button"
                   className="otp-resend-link"
                   onClick={handleResendOTP}
+                  disabled={isResending || countdown > 0}
                 >
-                  Resend OTP
+                  {countdown > 0
+                    ? `Resend in ${countdown}s`
+                    : isResending
+                    ? "Sending..."
+                    : "Resend OTP"}
                 </button>
               </p>
 
