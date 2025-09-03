@@ -120,9 +120,11 @@ export const AddCompany = () => {
       <style>
         {`
           .company-form {
+            
             max-width: 500px;
             margin: 40px auto;
             padding: 20px;
+            margin-top:20vh;
             border: 1px solid #ccc;
             border-radius: 8px;
             background: #f9f9f9;
@@ -157,6 +159,16 @@ export const AddCompany = () => {
           .company-form button:hover {
             background: #df4019ff;
           }
+            @media (max-width: 768px) {
+            .company-form{
+                margin-top:40vh;
+            }
+            }
+            @media (max-width: 1300px) {
+            .company-form{
+                margin-top:30vh;
+            }
+            }
         `}
       </style>
     </>
