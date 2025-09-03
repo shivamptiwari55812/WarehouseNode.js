@@ -17,6 +17,7 @@ const OrderManagement = () => {
   const [loading, setLoading] = useState(false);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [orderProducts, setOrderProducts] = useState([]);
   const [generatePDF, setGeneratePDF] = useState(false);
@@ -75,6 +76,11 @@ useEffect(() => {
     setSelectedCompany(company);
     setShowUpdateModal(true);
   };
+
+   const handleAddCompanyClick = () => {
+    setShowAddCompanyModal(true);
+  };
+
 
   const addProductRow = () => {
     setOrderProducts([
@@ -160,6 +166,37 @@ useEffect(() => {
     setLoading(false);
   }
 };
+
+const handleSubmitAddCompany = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const formData = new FormData(e.target);
+
+    try {
+      const res = await fetch("http://localhost:5050/orderManagement/companies", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert("Company added successfully!");
+        setShowAddCompanyModal(false);
+        // Refresh companies list
+        const companiesRes = await fetch("http://localhost:5050/orderManagement/companies");
+        const companiesData = await companiesRes.json();
+        if (companiesData.success) setCompanies(companiesData.data);
+      } else {
+        alert(data.message || "Error adding company");
+      }
+    } catch (err) {
+      console.error("Error adding company:", err);
+      alert("Something went wrong!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const generateOrderPDF = () => {
     const orderData = `
@@ -250,6 +287,13 @@ Generated on: ${new Date().toLocaleString()}
               className="search-input"
             />
           </div>
+           <button
+              className="btn btn-primary add-company-btn"
+              onClick={handleAddCompanyClick}
+            >
+              <Plus size={16} />
+              Add Company
+            </button>
         </div>
 
         <div className="companies-grid">
@@ -310,6 +354,132 @@ Generated on: ${new Date().toLocaleString()}
           ))}
         </div>
       </div>
+
+      {/* Add Company Modal */}
+      {showAddCompanyModal && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowAddCompanyModal(false)}
+        >
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Add New Company</h2>
+            </div>
+
+            <form className="update-form" onSubmit={handleSubmitAddCompany}>
+              <div className="form-group">
+                <label>Company Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Enter company name"
+                  className="form-input"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Contact Person</label>
+                <input
+                  type="text"
+                  name="contact"
+                  placeholder="Enter contact person name"
+                  className="form-input"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Enter email address"
+                  className="form-input"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Phone</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Enter phone number"
+                  className="form-input"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>GSTIN</label>
+                <input
+                  type="text"
+                  name="GSTIN"
+                  placeholder="Enter GSTIN number"
+                  className="form-input"
+                />
+              </div>
+              <div className="form-group">
+                <label>Document</label>
+                <input
+                  type="file"
+                  name="document"
+                  className="form-input"
+                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                />
+              </div>
+              <div className="form-group">
+                <label>Address</label>
+                <textarea
+                  name="address"
+                  placeholder="Enter company address"
+                  className="form-input"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+              <div className="form-group">
+                <label>Company Type</label>
+                <select
+                  name="type"
+                  className="form-input"
+                  required
+                  defaultValue=""
+                >
+                  <option value="" disabled>Select company type</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Retail">Retail</option>
+                  <option value="Manufacturing">Manufacturing</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Food & Beverage">Food & Beverage</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Status</label>
+                <select
+                  name="status"
+                  className="form-input"
+                  defaultValue="active"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+
+              <div className="form-actions">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowAddCompanyModal(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                  {loading ? "Adding..." : "Add Company"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Order Modal */}
       {showOrderModal && (

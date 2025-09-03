@@ -122,6 +122,32 @@
   box-shadow: 0 0 0 3px rgba(255, 69, 0, 0.1);
 }
 
+.btn-add-company {
+  background: linear-gradient(135deg, #16a34a, #22c55e); /* Green gradient */
+  color: white;
+  border: 2px solid #16a34a;
+}
+.btn-add-company:hover {
+  background: linear-gradient(135deg, #15803d, #16a34a);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.modal {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
 /* Companies Grid */
 .companies-grid {
   display: grid;
@@ -408,12 +434,13 @@
 .form-group select,
 .form-group textarea,
 .form-input {
-  padding: 0.75rem;
+ padding: 0.75rem 2.5rem 0.75rem 0.75rem; 
   border: 2px solid #e2e8f0;
   border-radius: 6px;
   font-size: 1rem;
   transition: border-color 0.2s;
   background: white;
+  min-height: 48px; 
 }
 
 .form-group input:focus,
