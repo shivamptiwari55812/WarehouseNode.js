@@ -70,7 +70,7 @@ const [formData, setFormData] = useState({
             
             <form onSubmit={handleSubmit} className="formroles">
                 <label htmlFor="Roles" id="roleshead">Select Role you want to create</label>
-                <select name="Roles" id="selectbtn" value={formData.role} onChange={handleInputChange}>
+                <select name="role" id="selectbtn" value={formData.role} onChange={handleInputChange}>
                     <option value="InboundStaff">Inbound Staff</option>
                     <option value="OutboundStaff">Outbound Staff</option>
                     <option value="Manager">Manager</option>
