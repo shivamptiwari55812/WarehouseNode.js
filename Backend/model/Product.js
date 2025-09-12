@@ -10,6 +10,11 @@ const productSchema = new mongoose.Schema({
       return "P" + Date.now().toString().slice(-6);
     }
   },
+  location:{
+    type: String,
+    required: [true, "location is required"],
+    trim: true
+  },
   name: {
     type: String,
     required: [true, "Product name is required"],
@@ -37,8 +42,23 @@ const productSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["active", "inactive", "discontinued"],
+    enum: ["active", "inactive", "discontinued","in-stock","out-of-stock","low-stock"],
     default: "active"
+  },
+  supplier:{
+    type:String,
+    required:true
+
+  },
+  maxStock:{
+    type: Number,
+    required: true,
+    trim: true
+  },
+  minStock:{
+    type: Number,
+    required: true,
+    trim: true
   },
   createdAt: {
     type: Date,

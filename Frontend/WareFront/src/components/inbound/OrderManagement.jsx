@@ -23,11 +23,18 @@ const OrderManagement = () => {
   const [generatePDF, setGeneratePDF] = useState(false);
   const [companies, setCompanies] = useState([]);
   const [products, setProducts] = useState([]);
-
+const token = localStorage.getItem("token")
  useEffect(() => {
   const fetchCompanies = async () => {
     try {
-      const res = await fetch("http://localhost:5050/orderManagement/companies");
+      const res = await fetch("http://localhost:5050/orderManagement/companies",{
+        method:"GET",
+        headers:{
+         "Authorization": `Bearer ${token}`,
+         "Content-Type":"Application/json"
+        }
+        
+      });
       const data = await res.json();
       if (data.success) setCompanies(data.data);
     } catch (err) {
@@ -42,7 +49,14 @@ const OrderManagement = () => {
 useEffect(() => {
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:5050/orderManagement/products");
+      const res = await fetch("http://localhost:5050/orderManagement/products",{
+        method:"GET",
+        headers:{
+          "Authorization": `Bearer ${token}`,
+          "Content-Type":"Application/json",
+          
+        }
+      });
       const data = await res.json();
       if (data.success) setProducts(data.data);
     } catch (err) {
@@ -117,7 +131,7 @@ useEffect(() => {
     try {
       const res = await fetch("http://localhost:5050/orderManagement/orders", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
       const data = await res.json();
@@ -143,12 +157,15 @@ useEffect(() => {
   setLoading(true);
 
   const formData = new FormData(e.target);
-
+    console.log(formData)
   try {
     const res = await fetch(
       `http://localhost:5050/api/companies/${selectedCompany._id}`,
       {
         method: "PUT",
+        headers:{
+          "Authorization": `Bearer ${token}`,
+        },
         body: formData,
       }
     );
@@ -176,6 +193,9 @@ const handleSubmitAddCompany = async (e) => {
     try {
       const res = await fetch("http://localhost:5050/orderManagement/companies", {
         method: "POST",
+        headers:{
+          "Authorization": `Bearer ${token}`,
+        },
         body: formData,
       });
       const data = await res.json();
@@ -183,7 +203,16 @@ const handleSubmitAddCompany = async (e) => {
         alert("Company added successfully!");
         setShowAddCompanyModal(false);
         // Refresh companies list
-        const companiesRes = await fetch("http://localhost:5050/orderManagement/companies");
+        const companiesRes = await fetch("http://localhost:5050/orderManagement/companies",{
+          
+        method:"GET",
+        headers:{
+         "Authorization": `Bearer ${token}`,
+         "Content-Type":"Application/json"
+        }
+        
+      
+        });
         const companiesData = await companiesRes.json();
         if (companiesData.success) setCompanies(companiesData.data);
       } else {
@@ -652,7 +681,7 @@ Generated on: ${new Date().toLocaleString()}
                 <label>Document</label>
                 <input
                   type="File"
-                  Value={selectedCompany?.document}
+                  
                   className="form-input"
                 />
               </div>

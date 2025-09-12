@@ -32,6 +32,7 @@ export const getAllCompanies = async (req, res) => {
       success: true,
       count: companies.length,
       data: companies,
+      
     });
   } catch (error) {
     res.status(500).json({
@@ -112,6 +113,8 @@ export const createCompany = async (req, res) => {
 // Update company
 export const updateCompany = async (req, res) => {
   try {
+
+    console.log(req.body)
     const updateData = {};
 
     if (req.body.name) updateData.name = req.body.name.trim();

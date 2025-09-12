@@ -18,6 +18,12 @@ function logout (){
 const locateOrder=()=>{
   navigate("/orderManagement")
 }
+const locateBill=()=>{
+  navigate("/Bills")
+}
+const locateAnnual=()=>{
+  navigate("/AnnualReports")
+}
 const locateInventory=()=>{
   navigate("/InventoryManagement")
 }
@@ -81,8 +87,8 @@ const locateToDashboard= ()=>{
               <i className="fa fa-caret-down"></i>
             </button>
             <div className="dropdown-content">
-              <a href="annualRep.html">Annual</a>
-              <a href="Bills.html">Bills</a>
+              <a onClick={locateAnnual}>Annual</a>
+              <a  onClick={locateBill}>Bills</a>
             </div>
           </div>
       </div>  

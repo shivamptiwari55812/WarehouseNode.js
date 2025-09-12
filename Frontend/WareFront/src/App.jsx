@@ -15,6 +15,7 @@ import {WarehouseDetails} from "./components/Warehouse/setWarehouse.jsx"
 import { Orderplacement } from './components/inbound/OrderPlacement.jsx'
 import OrderManagement from './components/inbound/OrderManagement.jsx'
 import AnnualReports from "./components/reports/AnnualReports.jsx";
+import Scanner from "./components/Warehouse/Scanner.jsx"
 import Bills from "./components/reports/Bills.jsx";
 import InventoryManagement from './components/Warehouse/InventoryManagement.jsx'
 function DashboardLayout(){
@@ -22,6 +23,15 @@ function DashboardLayout(){
     <>
     <Header1/>
     <Dashboard/>
+    </>
+  )
+}
+
+function Scanner1(){
+  return(
+    <>
+    
+    <Scanner/>
     </>
   )
 }
@@ -111,6 +121,10 @@ const router = createBrowserRouter([
   {
     path:"/verify",
     element: <Verify/>
+  },
+  {
+    path:"/scanner",
+    element: <Scanner1/>
   },
   {
     path:"/TermsOfService",
