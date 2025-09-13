@@ -1,47 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Plus, Edit, Trash2, Package, AlertTriangle, Download, Upload } from 'lucide-react';
-import '../../cssfiles/InventoryManagement.css';
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  Plus,
+  Edit,
+  Trash2,
+  Package,
+  AlertTriangle,
+  Download,
+  Upload,
+} from "lucide-react";
+import "../../cssfiles/InventoryManagement.css";
 
 const InventoryManagement = () => {
   const [products, setProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Form state for adding/editing products
   const [formData, setFormData] = useState({
-    name: '',
-    category: '',
+    name: "",
+    category: "",
     stock: 0,
     minStock: 0,
     maxStock: 0,
     price: 0,
-    supplier: '',
-    location: '',
-    description: ''
+    supplier: "",
+    location: "",
+    description: "",
   });
 
-  const categories = ['Electronics', 'Clothing', 'Home & Garden', 'Sports', 'Food & Beverage', 'Automotive'];
+  const categories = [
+    "Electronics",
+    "Clothing",
+    "Home & Garden",
+    "Sports",
+    "Food & Beverage",
+    "Automotive",
+  ];
 
   // Frontend API functions for backend integration
-  const API_BASE_URL = 'http://localhost:5050/api'; // Replace with your backend URL
+  const API_BASE_URL = "http://localhost:5050/api"; // Replace with your backend URL
 
   // Fetch all products from backend
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/products`);
-      if (!response.ok) throw new Error('Failed to fetch products');
+      if (!response.ok) throw new Error("Failed to fetch products");
       const data = await response.json();
       setProducts(data);
     } catch (err) {
       // setError('Failed to load products');
-      console.error('Error fetching products:', err);
+      console.error("Error fetching products:", err);
       // Fallback to mock data for demo
       setProducts(mockProducts);
     } finally {
@@ -54,22 +70,22 @@ const InventoryManagement = () => {
     setLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/products`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(productData)
+        body: JSON.stringify(productData),
       });
-      
-      if (!response.ok) throw new Error('Failed to add product');
+
+      if (!response.ok) throw new Error("Failed to add product");
       const newProduct = await response.json();
-      console.log(newProduct)
-      setProducts(prev => [...prev, newProduct]);
+      console.log(newProduct);
+      setProducts((prev) => [...prev, newProduct]);
       setShowAddModal(false);
       resetForm();
     } catch (err) {
       // setError('Failed to add product');
-      console.error('Error adding product:', err);
+      console.error("Error adding product:", err);
     } finally {
       setLoading(false);
     }
@@ -80,22 +96,24 @@ const InventoryManagement = () => {
     setLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(productData)
+        body: JSON.stringify(productData),
       });
-      
-      if (!response.ok) throw new Error('Failed to update product');
+
+      if (!response.ok) throw new Error("Failed to update product");
       const updatedProduct = await response.json();
-      setProducts(prev => prev.map(p => p.id === productId ? updatedProduct : p));
+      setProducts((prev) =>
+        prev.map((p) => (p.id === productId ? updatedProduct : p))
+      );
       setShowEditModal(false);
       setSelectedProduct(null);
       resetForm();
     } catch (err) {
       // setError('Failed to update product');
-      console.error('Error updating product:', err);
+      console.error("Error updating product:", err);
     } finally {
       setLoading(false);
     }
@@ -103,19 +121,20 @@ const InventoryManagement = () => {
 
   // Delete product from backend
   const deleteProduct = async (productId) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) return;
-    
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
+
     setLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-        method: 'DELETE'
+        method: "DELETE",
       });
-      
-      if (!response.ok) throw new Error('Failed to delete product');
-      setProducts(prev => prev.filter(p => p.id !== productId));
+
+      if (!response.ok) throw new Error("Failed to delete product");
+      setProducts((prev) => prev.filter((p) => p.id !== productId));
     } catch (err) {
       // setError('Failed to delete product');
-      console.error('Error deleting product:', err);
+      console.error("Error deleting product:", err);
     } finally {
       setLoading(false);
     }
@@ -124,81 +143,86 @@ const InventoryManagement = () => {
   // Update stock quantity
   const updateStock = async (productId, newStock) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/products/${productId}/stock`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ stock: newStock })
-      });
-      
-      if (!response.ok) throw new Error('Failed to update stock');
+      const response = await fetch(
+        `${API_BASE_URL}/products/${productId}/stock`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ stock: newStock }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to update stock");
       const updatedProduct = await response.json();
-      setProducts(prev => prev.map(p => p.id === productId ? updatedProduct : p));
+      setProducts((prev) =>
+        prev.map((p) => (p.id === productId ? updatedProduct : p))
+      );
     } catch (err) {
       // setError('Failed to update stock');
-      console.error('Error updating stock:', err);
+      console.error("Error updating stock:", err);
     }
   };
 
   // Mock data for demo purposes
   const mockProducts = [
     {
-      id: 'P001',
-      name: 'iPhone 15 Pro',
-      category: 'Electronics',
+      id: "P001",
+      name: "iPhone 15 Pro",
+      category: "Electronics",
       stock: 245,
       minStock: 50,
       maxStock: 500,
       price: 999.99,
-      supplier: 'Apple Inc.',
-      location: 'A1-B2-C3',
-      description: 'Latest iPhone model with advanced features',
-      status: 'in-stock',
-      lastUpdated: '2024-01-15'
+      supplier: "Apple Inc.",
+      location: "A1-B2-C3",
+      description: "Latest iPhone model with advanced features",
+      status: "in-stock",
+      lastUpdated: "2024-01-15",
     },
     {
-      id: 'P002',
-      name: 'Samsung Galaxy S24',
-      category: 'Electronics',
+      id: "P002",
+      name: "Samsung Galaxy S24",
+      category: "Electronics",
       stock: 12,
       minStock: 20,
       maxStock: 300,
       price: 899.99,
-      supplier: 'Samsung Electronics',
-      location: 'A1-B2-C4',
-      description: 'Premium Android smartphone',
-      status: 'low-stock',
-      lastUpdated: '2024-01-14'
+      supplier: "Samsung Electronics",
+      location: "A1-B2-C4",
+      description: "Premium Android smartphone",
+      status: "low-stock",
+      lastUpdated: "2024-01-14",
     },
     {
-      id: 'P003',
-      name: 'Nike Air Max 270',
-      category: 'Sports',
+      id: "P003",
+      name: "Nike Air Max 270",
+      category: "Sports",
       stock: 0,
       minStock: 30,
       maxStock: 400,
-      price: 150.00,
-      supplier: 'Nike Inc.',
-      location: 'B2-C1-D2',
-      description: 'Comfortable running shoes',
-      status: 'out-of-stock',
-      lastUpdated: '2024-01-10'
+      price: 150.0,
+      supplier: "Nike Inc.",
+      location: "B2-C1-D2",
+      description: "Comfortable running shoes",
+      status: "out-of-stock",
+      lastUpdated: "2024-01-10",
     },
     {
-      id: 'P004',
-      name: 'Levi\'s 501 Jeans',
-      category: 'Clothing',
+      id: "P004",
+      name: "Levi's 501 Jeans",
+      category: "Clothing",
       stock: 89,
       minStock: 25,
       maxStock: 200,
       price: 79.99,
-      supplier: 'Levi Strauss & Co.',
-      location: 'C1-D2-E1',
-      description: 'Classic straight-fit jeans',
-      status: 'in-stock',
-      lastUpdated: '2024-01-12'
-    }
+      supplier: "Levi Strauss & Co.",
+      location: "C1-D2-E1",
+      description: "Classic straight-fit jeans",
+      status: "in-stock",
+      lastUpdated: "2024-01-12",
+    },
   ];
 
   useEffect(() => {
@@ -207,23 +231,23 @@ const InventoryManagement = () => {
 
   const resetForm = () => {
     setFormData({
-      name: '',
-      category: '',
+      name: "",
+      category: "",
       stock: 0,
       minStock: 0,
       maxStock: 0,
       price: 0,
-      supplier: '',
-      location: '',
-      description: ''
+      supplier: "",
+      location: "",
+      description: "",
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'number' ? parseFloat(value) || 0 : value
+      [name]: type === "number" ? parseFloat(value) || 0 : value,
     }));
   };
 
@@ -235,9 +259,13 @@ const InventoryManagement = () => {
       addProduct({
         ...formData,
         id: `P${Date.now()}`,
-        status: formData.stock > formData.minStock ? 'in-stock' : 
-                formData.stock > 0 ? 'low-stock' : 'out-of-stock',
-        lastUpdated: new Date().toISOString().split('T')[0]
+        status:
+          formData.stock > formData.minStock
+            ? "in-stock"
+            : formData.stock > 0
+            ? "low-stock"
+            : "out-of-stock",
+        lastUpdated: new Date().toISOString().split("T")[0],
       });
     }
   };
@@ -253,40 +281,61 @@ const InventoryManagement = () => {
       price: product.price,
       supplier: product.supplier,
       location: product.location,
-      description: product.description || ''
+      description: product.description || "",
     });
     setShowEditModal(true);
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'in-stock':
+      case "in-stock":
         return <Package className="status-icon in-stock" />;
-      case 'low-stock':
+      case "low-stock":
         return <AlertTriangle className="status-icon low-stock" />;
-      case 'out-of-stock':
+      case "out-of-stock":
         return <AlertTriangle className="status-icon out-of-stock" />;
       default:
         return <Package className="status-icon" />;
     }
   };
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
-    const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      categoryFilter === "all" || product.category === categoryFilter;
+    const matchesStatus =
+      statusFilter === "all" || product.status === statusFilter;
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
   const stockStats = {
     total: products.length,
-    inStock: products.filter(p => p.status === 'in-stock').length,
-    lowStock: products.filter(p => p.status === 'low-stock').length,
-    outOfStock: products.filter(p => p.status === 'out-of-stock').length,
-    totalValue: products.reduce((sum, product) => sum + (product.stock * product.price), 0)
+    inStock: products.filter((p) => p.status === "in-stock").length,
+    lowStock: products.filter((p) => p.status === "low-stock").length,
+    outOfStock: products.filter((p) => p.status === "out-of-stock").length,
+    totalValue: products.reduce(
+      (sum, product) => sum + product.stock * product.price,
+      0
+    ),
   };
-  
+  const handleLocationChange = (field, value) => {
+    setFormData((prev) => {
+      const updated = { ...prev, [field]: value };
+
+      if (
+        updated.locationRow &&
+        updated.locationShelf &&
+        updated.locationColumn
+      ) {
+        updated.location = `${updated.locationRow}-${updated.locationShelf}-${updated.locationColumn}`;
+      }
+
+      return updated;
+    });
+  };
+
   const generateRowOptions = () => {
     return Array.from({ length: 10 }, (_, i) => String.fromCharCode(65 + i)); // A-J
   };
@@ -299,20 +348,20 @@ const InventoryManagement = () => {
     return Array.from({ length: 20 }, (_, i) => (i + 1).toString()); // 1-20
   };
 
-
   const exportInventory = () => {
     const csvContent = [
-      'ID,Name,Category,Stock,Min Stock,Max Stock,Price,Supplier,Location,Status,Last Updated',
-      ...products.map(product => 
-        `${product.id},"${product.name}","${product.category}",${product.stock},${product.minStock},${product.maxStock},${product.price},"${product.supplier}","${product.location}","${product.status}",${product.lastUpdated}`
-      )
-    ].join('\n');
+      "ID,Name,Category,Stock,Min Stock,Max Stock,Price,Supplier,Location,Status,Last Updated",
+      ...products.map(
+        (product) =>
+          `${product.id},"${product.name}","${product.category}",${product.stock},${product.minStock},${product.maxStock},${product.price},"${product.supplier}","${product.location}","${product.status}",${product.lastUpdated}`
+      ),
+    ].join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `inventory-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `inventory-${new Date().toISOString().split("T")[0]}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -331,7 +380,10 @@ const InventoryManagement = () => {
             <Download size={20} />
             Export Inventory
           </button>
-          <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowAddModal(true)}
+          >
             <Plus size={20} />
             Add Product
           </button>
@@ -342,7 +394,7 @@ const InventoryManagement = () => {
         <div className="error-message">
           <AlertTriangle size={16} />
           {error}
-          <button onClick={() => setError('')}>×</button>
+          <button onClick={() => setError("")}>×</button>
         </div>
       )}
 
@@ -404,8 +456,10 @@ const InventoryManagement = () => {
               className="filter-select"
             >
               <option value="all">All Categories</option>
-              {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
               ))}
             </select>
             <select
@@ -436,7 +490,7 @@ const InventoryManagement = () => {
                     </div>
                   </div>
                   <div className={`status-badge status-${product.status}`}>
-                    {product.status.replace('-', ' ')}
+                    {product.status.replace("-", " ")}
                   </div>
                 </div>
 
@@ -454,74 +508,29 @@ const InventoryManagement = () => {
                     <span>{product.supplier}</span>
                   </div>
                   <div className="detail-row">
-                   <div className="form-group location-section full-width">
-                  <label>Location *</label>
-                  <div className="location-grid">
-                    <div className="location-field">
-                      <label htmlFor="locationRow">Row (A-J)</label>
-                      <select
-                        id="locationRow"
-                        value={product.locationRow}
-                        onChange={(e) => handleLocationChange('locationRow', e.target.value)}
-                        className="form-input"
-                        required
-                      >
-                        <option value="">Row</option>
-                        {generateRowOptions().map(row => (
-                          <option key={row} value={row}>{row}</option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                   
-                    
-                    <div className="location-field">
-                      <label htmlFor="locationColumn">Column (1-20)</label>
-                      <select
-                        id="locationColumn"
-                        value={product.locationColumn}
-                        onChange={(e) => handleLocationChange('locationColumn', e.target.value)}
-                        className="form-input"
-                        required
-                      >
-                        <option value="">Column</option>
-                        {generateColumnOptions().map(column => (
-                          <option key={column} value={column}>{column}</option>
-                        ))}
-                      </select>
-                    </div>
-                     <div className="location-field">
-                      <label htmlFor="locationShelf">Shelf (1-10)</label>
-                      <select
-                        id="locationShelf"
-                        value={product.locationShelf}
-                        onChange={(e) => handleLocationChange('locationShelf', e.target.value)}
-                        className="form-input"
-                        required
-                      >
-                        <option value="">Shelf</option>
-                        {generateShelfOptions().map(shelf => (
-                          <option key={shelf} value={shelf}>{shelf}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
+                    <strong>Location:</strong>
+                    <span>${product.location}</span>
                   </div>
                 </div>
 
                 <div className="stock-section">
                   <div className="stock-header">
                     <strong>Stock Level</strong>
-                    <span className="stock-count">{product.stock} / {product.maxStock}</span>
+                    <span className="stock-count">
+                      {product.stock} / {product.maxStock}
+                    </span>
                   </div>
                   <div className="stock-bar">
-                    <div 
+                    <div
                       className="stock-fill"
-                      style={{ 
+                      style={{
                         width: `${(product.stock / product.maxStock) * 100}%`,
-                        backgroundColor: product.status === 'in-stock' ? '#10b981' : 
-                                       product.status === 'low-stock' ? '#f59e0b' : '#ef4444'
+                        backgroundColor:
+                          product.status === "in-stock"
+                            ? "#10b981"
+                            : product.status === "low-stock"
+                            ? "#f59e0b"
+                            : "#ef4444",
                       }}
                     ></div>
                   </div>
@@ -529,11 +538,13 @@ const InventoryManagement = () => {
                     <span>Min: {product.minStock}</span>
                     <span>Max: {product.maxStock}</span>
                   </div>
-                  
+
                   <div className="stock-controls">
-                    <button 
+                    <button
                       className="stock-btn decrease"
-                      onClick={() => updateStock(product.id, Math.max(0, product.stock - 1))}
+                      onClick={() =>
+                        updateStock(product.id, Math.max(0, product.stock - 1))
+                      }
                       disabled={product.stock <= 0}
                     >
                       -
@@ -541,14 +552,21 @@ const InventoryManagement = () => {
                     <input
                       type="number"
                       value={product.stock}
-                      onChange={(e) => updateStock(product.id, parseInt(e.target.value) || 0)}
+                      onChange={(e) =>
+                        updateStock(product.id, parseInt(e.target.value) || 0)
+                      }
                       className="stock-input"
                       min="0"
                       max={product.maxStock}
                     />
-                    <button 
+                    <button
                       className="stock-btn increase"
-                      onClick={() => updateStock(product.id, Math.min(product.maxStock, product.stock + 1))}
+                      onClick={() =>
+                        updateStock(
+                          product.id,
+                          Math.min(product.maxStock, product.stock + 1)
+                        )
+                      }
                       disabled={product.stock >= product.maxStock}
                     >
                       +
@@ -557,14 +575,14 @@ const InventoryManagement = () => {
                 </div>
 
                 <div className="product-actions">
-                  <button 
+                  <button
                     className="btn btn-secondary"
                     onClick={() => openEditModal(product)}
                   >
                     <Edit size={16} />
                     Edit
                   </button>
-                  <button 
+                  <button
                     className="btn btn-danger"
                     onClick={() => deleteProduct(product.id)}
                   >
@@ -610,8 +628,10 @@ const InventoryManagement = () => {
                       required
                     >
                       <option value="">Select Category</option>
-                      {categories.map(category => (
-                        <option key={category} value={category}>{category}</option>
+                      {categories.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -642,17 +662,71 @@ const InventoryManagement = () => {
                     />
                   </div>
                 </div>
-                <div className="form-group">
-                  <label>Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="e.g., A1-B2-C3"
-                  />
+                <div className="form-group location-section full-width">
+                  <label>Location *</label>
+                  <div className="location-grid">
+                    <div className="location-field">
+                      <label htmlFor="locationRow">Row (A-J)</label>
+                      <select
+                        id="locationRow"
+                        value={formData.locationRow || ""}
+                        onChange={(e) =>
+                          handleLocationChange("locationRow", e.target.value)
+                        }
+                        className="form-input"
+                        required
+                      >
+                        <option value="">Row</option>
+                        {generateRowOptions().map((row) => (
+                          <option key={row} value={row}>
+                            {row}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="location-field">
+                      <label htmlFor="locationShelf">Shelf (1-10)</label>
+                      <select
+                        id="locationShelf"
+                        value={formData.locationShelf || ""}
+                        onChange={(e) =>
+                          handleLocationChange("locationShelf", e.target.value)
+                        }
+                        className="form-input"
+                        required
+                      >
+                        <option value="">Shelf</option>
+                        {generateShelfOptions().map((shelf) => (
+                          <option key={shelf} value={shelf}>
+                            {shelf}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="location-field">
+                      <label htmlFor="locationColumn">Column (1-20)</label>
+                      <select
+                        id="locationColumn"
+                        value={formData.locationColumn || ""}
+                        onChange={(e) =>
+                          handleLocationChange("locationColumn", e.target.value)
+                        }
+                        className="form-input"
+                        required
+                      >
+                        <option value="">Column</option>
+                        {generateColumnOptions().map((column) => (
+                          <option key={column} value={column}>
+                            {column}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
+
                 <div className="form-group">
                   <label>Description</label>
                   <textarea
@@ -718,8 +792,12 @@ const InventoryManagement = () => {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
-                  {loading ? 'Adding...' : 'Add Product'}
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? "Adding..." : "Add Product"}
                 </button>
               </div>
             </form>
@@ -762,8 +840,10 @@ const InventoryManagement = () => {
                       required
                     >
                       <option value="">Select Category</option>
-                      {categories.map(category => (
-                        <option key={category} value={category}>{category}</option>
+                      {categories.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -792,16 +872,59 @@ const InventoryManagement = () => {
                     />
                   </div>
                 </div>
-                <div className="form-group">
-                  <label>Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
+                <div className="form-group location-section full-width">
+  <label>Location *</label>
+  <div className="location-grid">
+    <div className="location-field">
+      <label htmlFor="locationRow">Row (A-J)</label>
+      <select
+        id="locationRow"
+        value={formData.locationRow || ''}
+        onChange={(e) => handleLocationChange('locationRow', e.target.value)}
+        className="form-input"
+        required
+      >
+        <option value="">Row</option>
+        {generateRowOptions().map(row => (
+          <option key={row} value={row}>{row}</option>
+        ))}
+      </select>
+    </div>
+
+    <div className="location-field">
+      <label htmlFor="locationShelf">Shelf (1-10)</label>
+      <select
+        id="locationShelf"
+        value={formData.locationShelf || ''}
+        onChange={(e) => handleLocationChange('locationShelf', e.target.value)}
+        className="form-input"
+        required
+      >
+        <option value="">Shelf</option>
+        {generateShelfOptions().map(shelf => (
+          <option key={shelf} value={shelf}>{shelf}</option>
+        ))}
+      </select>
+    </div>
+
+    <div className="location-field">
+      <label htmlFor="locationColumn">Column (1-20)</label>
+      <select
+        id="locationColumn"
+        value={formData.locationColumn || ''}
+        onChange={(e) => handleLocationChange('locationColumn', e.target.value)}
+        className="form-input"
+        required
+      >
+        <option value="">Column</option>
+        {generateColumnOptions().map(column => (
+          <option key={column} value={column}>{column}</option>
+        ))}
+      </select>
+    </div>
+  </div>
+</div>
+
                 <div className="form-group">
                   <label>Description</label>
                   <textarea
@@ -864,8 +987,12 @@ const InventoryManagement = () => {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
-                  {loading ? 'Updating...' : 'Update Product'}
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? "Updating..." : "Update Product"}
                 </button>
               </div>
             </form>
