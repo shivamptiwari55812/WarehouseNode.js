@@ -146,7 +146,7 @@ function Scanner() {
         </div>
       </header>
 
-      <main className="main-content">
+      <main className="scanner-main-content">
         <div className="scanner-section">
           <div className="scanner-card">
             <h2>Barcode Scanner</h2>
