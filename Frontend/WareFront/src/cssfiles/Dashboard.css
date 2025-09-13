@@ -206,10 +206,16 @@
         width: 100%;
       }
     }
+<<<<<<< HEAD
     @media (max-width: 400px) {
       .dashboard-container{padding-top:40vh;}
       .main-content { padding: 16px; }
 
+=======
+    @media (max-width: 768px) {
+      .dashboard-container{padding-top:18vh;}
+      .main-content { padding: 16px; }
+>>>>>>> 82d565a4b8c77825c3cee37e7a743dd459a59ae2
       .dashboard-header-bar { flex-direction: column; align-items: flex-start; height: auto; padding: 12px; }
       .header-right { margin-top: 8px; }
       .dashboard-overview-title { font-size: 18px; }
