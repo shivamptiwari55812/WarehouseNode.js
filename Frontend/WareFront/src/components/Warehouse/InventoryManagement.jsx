@@ -286,6 +286,19 @@ const InventoryManagement = () => {
     outOfStock: products.filter(p => p.status === 'out-of-stock').length,
     totalValue: products.reduce((sum, product) => sum + (product.stock * product.price), 0)
   };
+  
+  const generateRowOptions = () => {
+    return Array.from({ length: 10 }, (_, i) => String.fromCharCode(65 + i)); // A-J
+  };
+
+  const generateShelfOptions = () => {
+    return Array.from({ length: 10 }, (_, i) => (i + 1).toString()); // 1-10
+  };
+
+  const generateColumnOptions = () => {
+    return Array.from({ length: 20 }, (_, i) => (i + 1).toString()); // 1-20
+  };
+
 
   const exportInventory = () => {
     const csvContent = [
@@ -441,8 +454,59 @@ const InventoryManagement = () => {
                     <span>{product.supplier}</span>
                   </div>
                   <div className="detail-row">
-                    <strong>Location:</strong>
-                    <span>{product.location}</span>
+                   <div className="form-group location-section full-width">
+                  <label>Location *</label>
+                  <div className="location-grid">
+                    <div className="location-field">
+                      <label htmlFor="locationRow">Row (A-J)</label>
+                      <select
+                        id="locationRow"
+                        value={product.locationRow}
+                        onChange={(e) => handleLocationChange('locationRow', e.target.value)}
+                        className="form-input"
+                        required
+                      >
+                        <option value="">Row</option>
+                        {generateRowOptions().map(row => (
+                          <option key={row} value={row}>{row}</option>
+                        ))}
+                      </select>
+                    </div>
+                    
+                   
+                    
+                    <div className="location-field">
+                      <label htmlFor="locationColumn">Column (1-20)</label>
+                      <select
+                        id="locationColumn"
+                        value={product.locationColumn}
+                        onChange={(e) => handleLocationChange('locationColumn', e.target.value)}
+                        className="form-input"
+                        required
+                      >
+                        <option value="">Column</option>
+                        {generateColumnOptions().map(column => (
+                          <option key={column} value={column}>{column}</option>
+                        ))}
+                      </select>
+                    </div>
+                     <div className="location-field">
+                      <label htmlFor="locationShelf">Shelf (1-10)</label>
+                      <select
+                        id="locationShelf"
+                        value={product.locationShelf}
+                        onChange={(e) => handleLocationChange('locationShelf', e.target.value)}
+                        className="form-input"
+                        required
+                      >
+                        <option value="">Shelf</option>
+                        {generateShelfOptions().map(shelf => (
+                          <option key={shelf} value={shelf}>{shelf}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
                   </div>
                 </div>
 
