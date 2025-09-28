@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Package, Scan, Plus, Minus, CheckCircle, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';   // ✅ for navigation
 import '../../cssfiles/Scanner.css';
 
 function Scanner() {
@@ -19,11 +20,13 @@ function Scanner() {
   });
   const [notification, setNotification] = useState(null);
 
+  const navigate = useNavigate(); // ✅ initialize navigation
+
   const handleBarcodeInput = (barcode) => {
     setScannedBarcode(barcode);
     setProduct(prev => ({ ...prev, barcode }));
     
-    // Simulate barcode lookup (in real app, this would query a database)
+    // Simulate lookup
     if (barcode === '123456789012') {
       setProduct(prev => ({
         ...prev,
@@ -39,8 +42,7 @@ function Scanner() {
   };
 
   const handleLocationChange = (field, value) => {
-    const updatedProduct = { ...product, [field]: value };
-    setProduct(updatedProduct);
+    setProduct(prev => ({ ...prev, [field]: value }));
   };
 
   const handleScan = () => {
@@ -56,35 +58,18 @@ function Scanner() {
     e.preventDefault();
     
     if (!product.barcode || !product.name) {
-      setNotification({
-        message: 'Please fill in required fields (barcode and product name)',
-        type: 'error'
-      });
+      setNotification({ message: 'Please fill in required fields (barcode and product name)', type: 'error' });
       return;
     }
 
-    if (mode === 'add' && (!product.locationRow || !product.locationShelf || !product.locationColumn)) {
-      setNotification({
-        message: 'Please specify complete location (Row, Shelf, Column)',
-        type: 'error'
-      });
-      return;
-    }
-
-    if (mode === 'release' && (!product.locationRow || !product.locationShelf || !product.locationColumn)) {
-      setNotification({
-        message: 'Please specify location to release from',
-        type: 'error'
-      });
+    if ((mode === 'add' || mode === 'release') && (!product.locationRow || !product.locationShelf || !product.locationColumn)) {
+      setNotification({ message: 'Please specify complete location (Row, Shelf, Column)', type: 'error' });
       return;
     }
 
     const action = mode === 'add' ? 'added to' : 'released from';
     const location = `${product.locationRow}-${product.locationShelf}-${product.locationColumn}`;
-    setNotification({
-      message: `${product.name} successfully ${action} inventory at location ${location}`,
-      type: 'success'
-    });
+    setNotification({ message: `${product.name} successfully ${action} inventory at location ${location}`, type: 'success' });
 
     setProduct({
       barcode: '',
@@ -106,17 +91,9 @@ function Scanner() {
     setProduct(prev => ({ ...prev, [field]: value }));
   };
 
-  const generateRowOptions = () => {
-    return Array.from({ length: 10 }, (_, i) => String.fromCharCode(65 + i)); // A-J
-  };
-
-  const generateShelfOptions = () => {
-    return Array.from({ length: 10 }, (_, i) => (i + 1).toString()); // 1-10
-  };
-
-  const generateColumnOptions = () => {
-    return Array.from({ length: 20 }, (_, i) => (i + 1).toString()); // 1-20
-  };
+  const generateRowOptions = () => Array.from({ length: 10 }, (_, i) => String.fromCharCode(65 + i)); // A-J
+  const generateShelfOptions = () => Array.from({ length: 10 }, (_, i) => (i + 1).toString()); // 1-10
+  const generateColumnOptions = () => Array.from({ length: 20 }, (_, i) => (i + 1).toString()); // 1-20
 
   return (
     <div className="app">
@@ -124,7 +101,6 @@ function Scanner() {
         <div className="header-content">
           <div className="logo">
             <Package className="logo-icon" />
-            
           </div>
           
           <div className="mode-toggle">
@@ -229,6 +205,25 @@ function Scanner() {
                     <option value="Tools & Hardware">Tools & Hardware</option>
                     <option value="Other">Other</option>
                   </select>
+                </div>
+
+                {/* ✅ Generate Button */}
+                <div className="form-group full-width">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/generator")}
+                    style={{
+                      marginTop: "10px",
+                      padding: "10px 20px",
+                      background: "#28a745",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "6px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    Generate
+                  </button>
                 </div>
 
                 {/* Location Section */}
