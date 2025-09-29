@@ -20,24 +20,86 @@ export function Dashboard ()  {
   const [summary, setSummary] = useState({});
   const [status, setStatus] = useState({});
   const [orders, setOrders] = useState([]);
+  const [loadingInvoice, setLoadingInvoice] = useState({});
 
   // Fetch data from backend
   useEffect(() => {
-    fetch("http://localhost:5050/api/dashboard/summary")
+    fetch("http://localhost:5050/order-management/summary")
       .then(res => res.json())
       .then(data => setSummary(data))
       .catch(err => console.error("Error fetching summary:", err));
 
-    fetch("http://localhost:5050/api/dashboard/status")
+    fetch("http://localhost:5050/order-management/status")
       .then(res => res.json())
       .then(data => setStatus(data))
       .catch(err => console.error("Error fetching status:", err));
 
-    fetch("http://localhost:5050/api/dashboard/recent-orders")
+        fetch("http://localhost:5050/order-management/recent-orders")
       .then(res => res.json())
-      .then(data => setOrders(data))
-      .catch(err => console.error("Error fetching orders:", err));
+      .then(data => {
+        console.log("Orders API Response:", data); 
+        if (Array.isArray(data.data)) {
+          setOrders(data.data);
+        } else if (Array.isArray(data)) {
+          setOrders(data);
+        } else {
+          console.error("Orders data not array:", data);
+          setOrders([]);
+        }
+      })
+      .catch(err => console.error(err));
   }, []);
+
+ const handleDownloadInvoice = async (orderId, pdfUrl) => {
+    setLoadingInvoice(prev => ({ ...prev, [orderId]: true }));
+    
+    try {
+      if (pdfUrl) {
+        // PDF already exists- download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = `invoice-${orderId}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        // PDF generate & download
+        const response = await fetch(`http://localhost:5050/order-management/orders/generate-invoice/${orderId}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log("Generated PDF response:", data); 
+        
+        if (data.pdfUrl) {
+          const link = document.createElement('a');
+          link.href = data.pdfUrl;
+          link.download = `invoice-${orderId}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          setOrders(prevOrders => 
+            prevOrders.map(order => 
+              order.orderId === orderId || order._id === orderId
+                ? { ...order, pdfPath: data.pdfUrl, pdfGenerated: true }
+                : order
+            )
+          );
+        } else {
+          throw new Error("PDF URL not received from server");
+        }
+      }
+    } catch (error) {
+      console.error("Invoice download error:", error);
+      alert(`Error: ${error.message || 'Something went wrong. Try again!'}`);
+    } finally {
+      setLoadingInvoice(prev => ({ ...prev, [orderId]: false }));
+    }
+  };
+
 
   // Render pie chart dynamically
   useEffect(() => {
@@ -154,26 +216,41 @@ export function Dashboard ()  {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map(order => (
-                    <tr key={order.id}>
-                      <td>{order.id}</td>
-                      <td>{order.customer}</td>
-                      <td>
-                        <span className={`status-pill status-${order.status.toLowerCase()}`}>
-                          {order.status}
-                        </span>
-                      </td>
-                      <td>{order.date}</td>
-                      <td>${order.amount}</td>
-                      <td><button className="button-33">Invoice</button></td>
-                    </tr>
-                  ))}
-                  {orders.length === 0 && (
-                    <tr>
-                      <td colSpan="6" style={{ textAlign: "center" }}>No orders found</td>
-                    </tr>
-                  )}
-                </tbody>
+              {orders.map(order => (
+                <tr key={order._id || order.id}>
+                  <td>{order.orderId || order.id}</td>
+                  <td>{order.companyDetails?.name || order.customer || 'N/A'}</td>
+                  <td>
+                    <span className={`status-pill status-${order.status.toLowerCase()}`}>
+                      {order.status}
+                    </span>
+                  </td>
+                  <td>{new Date(order.createdAt || order.date).toLocaleDateString()}</td>
+                  <td>${order.totalAmount || order.amount}</td>
+                  <td>
+                    <button 
+                      className="button-33"
+                      onClick={() => handleDownloadInvoice(order.orderId || order._id, order.pdfPath)}
+                      disabled={loadingInvoice[order.orderId || order._id]}
+                    >
+                      {loadingInvoice[order.orderId || order._id] 
+                        ? 'Loading...' 
+                        : order.pdfPath 
+                          ? 'Download' 
+                          : 'Generate'
+                      } Invoice
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {orders.length === 0 && (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                    No orders found
+                  </td>
+                </tr>
+              )}
+            </tbody>
               </table>
             </div>
           </div>
