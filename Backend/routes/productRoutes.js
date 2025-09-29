@@ -7,7 +7,8 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-  updateStock
+  updateStock,
+  updateStockByone
 } from '../controller/productController.js';
 
 import { productValidation } from '../Utilities&MiddleWare/productValidation.js';
@@ -30,5 +31,8 @@ router.delete('/:id', deleteProduct);
 
 // Update stock → PUT /order-management/products/:id/stock
 router.put('/:id/stock', updateStock);
+
+// Update stock by one → PUT /order-management/products/:id/:action
+
 
 export default router;

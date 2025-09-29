@@ -200,11 +200,51 @@ const updateStock = async (req, res) => {
   }
 };
 
+const updateStockByone = async (req, res) => {
+  try {
+    const { action } = req.body;
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    if (action === "increment") {
+      product.stock += 1;
+    } else if (action === "decrement") {
+      if (product.stock <= 0) {
+        return res.status(400).json({ success: false, message: "Insufficient stock" });
+      }
+      product.stock -= 1;
+    }
+
+    await product.save();
+    res.status(200).json({ success: true, message: "Stock updated successfully", data: product });
+  } catch (err) {
+    // Log the full Mongoose validation error
+    console.error("Full error:", err);
+    if (err.name === "ValidationError") {
+      for (const field in err.errors) {
+        console.error(`Validation error on ${field}:`, err.errors[field].message);
+      }
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Error updating stock",
+      error: err.message,
+    });
+  }
+};
+
+
 export {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
-  updateStock
+  updateStock,
+  updateStockByone
 };

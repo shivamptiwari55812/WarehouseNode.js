@@ -1,0 +1,40 @@
+[33maa746ad[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: pull origin main: Fast-forward
+[33m13f21ef[m HEAD@{1}: commit: Scanner and Generator
+[33m5eb2129[m HEAD@{2}: pull origin main: Fast-forward
+[33ma6f21bc[m HEAD@{3}: commit (merge): Scanner commit
+[33m55be464[m HEAD@{4}: commit: Added Location in all required ones:
+[33m5f7d4dd[m HEAD@{5}: commit: CSS fixes
+[33mcf961bc[m HEAD@{6}: commit: Scanner part
+[33m501c826[m HEAD@{7}: pull origin main: Merge made by the 'ort' strategy.
+[33meec433b[m HEAD@{8}: commit: Some Changes
+[33m9463e3f[m HEAD@{9}: pull origin main: Merge made by the 'ort' strategy.
+[33m22cc29f[m HEAD@{10}: commit (merge): Merge branch 'main' of https://github.com/shivamptiwari55812/WarehouseNode.js
+[33m476345f[m HEAD@{11}: commit: ds
+[33m2b3fc75[m HEAD@{12}: commit (merge): Merge branch 'main' of https://github.com/shivamptiwari55812/WarehouseNode.js
+[33m45d7708[m HEAD@{13}: commit: adding functionalities crud to inventory
+[33m4b38283[m HEAD@{14}: commit (merge): FOr merging
+[33maddfe38[m HEAD@{15}: commit: Added Inventory frontend
+[33m7d59a20[m HEAD@{16}: commit: Some Dashboard css changes
+[33m5df7b24[m HEAD@{17}: commit (merge): Merge branch 'main' of https://github.com/shivamptiwari55812/WarehouseNode.js
+[33m2f31891[m HEAD@{18}: commit: dashboard
+[33mb1a0593[m HEAD@{19}: commit: Added Order part
+[33m948e0bd[m HEAD@{20}: commit: Update
+[33m3248a33[m HEAD@{21}: commit: Final Login Page
+[33ma647c6f[m HEAD@{22}: commit (merge): Merge branch 'main' of https://github.com/shivamptiwari55812/WarehouseNode.js
+[33m3f5f0ab[m HEAD@{23}: commit: Few changes at my side
+[33ma8ed2f3[m HEAD@{24}: commit: Email setup done
+[33mdbad0ce[m HEAD@{25}: commit: FEW NEW UPDATES
+[33m7090a9e[m HEAD@{26}: pull origin main: Merge made by the 'ort' strategy.
+[33ma66e211[m HEAD@{27}: commit: Update on backend
+[33m17f4bf6[m HEAD@{28}: pull origin main: updating HEAD
+[33m17f4bf6[m HEAD@{29}: commit: Merge
+[33m75c2ff6[m HEAD@{30}: commit (merge): Merge branch 'main' of https://github.com/shivamptiwari55812/WarehouseNode.js
+[33m2193ee3[m HEAD@{31}: commit: Backend Authentication
+[33ma512b6d[m HEAD@{32}: pull origin main: Fast-forward
+[33me0295ad[m HEAD@{33}: commit: Warehouse Backend Component settings and Model creations
+[33m7d57b9c[m HEAD@{34}: commit: Backend Setup Done
+[33md3ff1bc[m HEAD@{35}: pull origin main: Fast-forward
+[33mf629c55[m HEAD@{36}: commit: New file structure
+[33mba98a2e[m HEAD@{37}: commit: 25
+[33ma8b60d6[m HEAD@{38}: commit: done with 1st setup
+[33m51eaaa1[m HEAD@{39}: commit (initial): Starting of the repo
