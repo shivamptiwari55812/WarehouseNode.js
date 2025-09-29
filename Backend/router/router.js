@@ -5,6 +5,7 @@ import { AddProduct ,SendProductDetails , DeleteProduct } from '../controller/Pr
 import { updateStockByone } from '../controller/productController.js';
 import Product from '../model/Product.js';
 import orderManagementRouter from "./orderManagement.js";
+import dashboardRoutes from "../routes/dashboardRoutes.js";
 
 const router = express.Router();
 
@@ -22,4 +23,5 @@ router.get("/productDetails",SendProductDetails)
 router.delete(`/deleteProduct`,DeleteProduct)
 
 router.use("/order-management", orderManagementRouter);
+router.use("/api/dashboard", dashboardRoutes);
 export default router;
