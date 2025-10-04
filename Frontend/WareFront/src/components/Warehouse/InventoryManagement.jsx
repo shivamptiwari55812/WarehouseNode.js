@@ -252,23 +252,30 @@ const InventoryManagement = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (selectedProduct) {
-      updateProduct(selectedProduct.id, formData);
-    } else {
-      addProduct({
-        ...formData,
-        id: `P${Date.now()}`,
-        status:
-          formData.stock > formData.minStock
-            ? "in-stock"
-            : formData.stock > 0
-            ? "low-stock"
-            : "out-of-stock",
-        lastUpdated: new Date().toISOString().split("T")[0],
-      });
-    }
+  e.preventDefault();
+
+  const finalLocation = `${formData.locationRow || ""}-${formData.locationShelf || ""}-${formData.locationColumn || ""}`;
+
+  const productData = {
+    ...formData,
+    location: finalLocation,
+    id: selectedProduct ? selectedProduct.id : `P${Date.now()}`,
+    status:
+      formData.stock > formData.minStock
+        ? "in-stock"
+        : formData.stock > 0
+        ? "low-stock"
+        : "out-of-stock",
+    lastUpdated: new Date().toISOString().split("T")[0],
   };
+
+  if (selectedProduct) {
+    updateProduct(selectedProduct.id, productData);
+  } else {
+    addProduct(productData);
+  }
+};
+
 
   const openEditModal = (product) => {
     setSelectedProduct(product);
@@ -509,7 +516,7 @@ const InventoryManagement = () => {
                   </div>
                   <div className="detail-row">
                     <strong>Location:</strong>
-                    <span>${product.location}</span>
+                    <span>{product.location}</span>
                   </div>
                 </div>
 
@@ -873,57 +880,69 @@ const InventoryManagement = () => {
                   </div>
                 </div>
                 <div className="form-group location-section full-width">
-  <label>Location *</label>
-  <div className="location-grid">
-    <div className="location-field">
-      <label htmlFor="locationRow">Row (A-J)</label>
-      <select
-        id="locationRow"
-        value={formData.locationRow || ''}
-        onChange={(e) => handleLocationChange('locationRow', e.target.value)}
-        className="form-input"
-        required
-      >
-        <option value="">Row</option>
-        {generateRowOptions().map(row => (
-          <option key={row} value={row}>{row}</option>
-        ))}
-      </select>
-    </div>
+                  <label>Location *</label>
+                  <div className="location-grid">
+                    <div className="location-field">
+                      <label htmlFor="locationRow">Row (A-J)</label>
+                      <select
+                        id="locationRow"
+                        value={formData.locationRow || ""}
+                        onChange={(e) =>
+                          handleLocationChange("locationRow", e.target.value)
+                        }
+                        className="form-input"
+                        required
+                      >
+                        <option value="">Row</option>
+                        {generateRowOptions().map((row) => (
+                          <option key={row} value={row}>
+                            {row}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-    <div className="location-field">
-      <label htmlFor="locationShelf">Shelf (1-10)</label>
-      <select
-        id="locationShelf"
-        value={formData.locationShelf || ''}
-        onChange={(e) => handleLocationChange('locationShelf', e.target.value)}
-        className="form-input"
-        required
-      >
-        <option value="">Shelf</option>
-        {generateShelfOptions().map(shelf => (
-          <option key={shelf} value={shelf}>{shelf}</option>
-        ))}
-      </select>
-    </div>
+                    <div className="location-field">
+                      <label htmlFor="locationShelf">Shelf (1-10)</label>
+                      <select
+                        id="locationShelf"
+                        value={formData.locationShelf || ""}
+                        onChange={(e) =>
+                          handleLocationChange("locationShelf", e.target.value)
+                        }
+                        className="form-input"
+                        required
+                      >
+                        <option value="">Shelf</option>
+                        {generateShelfOptions().map((shelf) => (
+                          <option key={shelf} value={shelf}>
+                            {shelf}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-    <div className="location-field">
-      <label htmlFor="locationColumn">Column (1-20)</label>
-      <select
-        id="locationColumn"
-        value={formData.locationColumn || ''}
-        onChange={(e) => handleLocationChange('locationColumn', e.target.value)}
-        className="form-input"
-        required
-      >
-        <option value="">Column</option>
-        {generateColumnOptions().map(column => (
-          <option key={column} value={column}>{column}</option>
-        ))}
-      </select>
-    </div>
-  </div>
-</div>
+                    <div className="location-field">
+                      <label htmlFor="locationColumn">Column (1-20)</label>
+                      <select
+                        id="locationColumn"
+                        value={formData.locationColumn || ""}
+                        onChange={(e) =>
+                          handleLocationChange("locationColumn", e.target.value)
+                        }
+                        className="form-input"
+                        required
+                      >
+                        <option value="">Column</option>
+                        {generateColumnOptions().map((column) => (
+                          <option key={column} value={column}>
+                            {column}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
 
                 <div className="form-group">
                   <label>Description</label>

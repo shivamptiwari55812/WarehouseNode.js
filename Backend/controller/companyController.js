@@ -91,7 +91,7 @@ export const createCompany = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Company created successfully",
+      message: "Company created successfully ",
       data: company,
     });
   } catch (error) {
@@ -113,23 +113,26 @@ export const createCompany = async (req, res) => {
 // Update company
 export const updateCompany = async (req, res) => {
   try {
+    // Convert body safely
+    const body = Object.fromEntries(Object.entries(req.body));
+    console.log("Incoming Data:", body);
 
-    console.log(req.body)
     const updateData = {};
 
-    if (req.body.name) updateData.name = req.body.name.trim();
-    if (req.body.contact) updateData.contact = req.body.contact.trim();
-    if (req.body.email) updateData.email = req.body.email.toLowerCase().trim();
-    if (req.body.phone) updateData.phone = req.body.phone.trim();
-    if (req.body.address) updateData.address = req.body.address.trim();
-    if (req.body.type) updateData.type = req.body.type;
-    if (req.body.status) updateData.status = req.body.status;
-    if (req.body.GSTIN) updateData.GSTIN = req.body.GSTIN.trim();
+    if (body.name) updateData.name = body.name.trim();
+    if (body.contact) updateData.contact = body.contact.trim();
+    if (body.email) updateData.email = body.email.toLowerCase().trim();
+    if (body.phone) updateData.phone = body.phone.trim();
+    if (body.address) updateData.address = body.address.trim();
+    if (body.type) updateData.type = body.type;
+    if (body.status) updateData.status = body.status;
+    if (body.GSTIN) updateData.GSTIN = body.GSTIN.trim();
 
     // Handle file upload
     if (req.file) {
       updateData.document = req.file.path;
     }
+console.log("🆔 ID to Update:", req.params.id);
 
     updateData.updatedAt = new Date();
 
@@ -138,7 +141,7 @@ export const updateCompany = async (req, res) => {
       updateData,
       { new: true, runValidators: true }
     );
-
+     console.log("Updated Company:", company);
     if (!company) {
       return res.status(404).json({
         success: false,
@@ -166,6 +169,7 @@ export const updateCompany = async (req, res) => {
     });
   }
 };
+
 
 // Delete company
 export const deleteCompany = async (req, res) => {

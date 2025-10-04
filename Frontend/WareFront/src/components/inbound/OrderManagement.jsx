@@ -23,55 +23,56 @@ const OrderManagement = () => {
   const [generatePDF, setGeneratePDF] = useState(false);
   const [companies, setCompanies] = useState([]);
   const [products, setProducts] = useState([]);
-const token = localStorage.getItem("token")
- useEffect(() => {
-  const fetchCompanies = async () => {
-    try {
-      const res = await fetch("http://localhost:5050/orderManagement/companies",{
-        method:"GET",
-        headers:{
-         "Authorization": `Bearer ${token}`,
-         "Content-Type":"Application/json"
-        }
-        
-      });
-      const data = await res.json();
-      if (data.success) setCompanies(data.data);
-    } catch (err) {
-      console.error("Error fetching companies:", err);
-    }
-  };
-  fetchCompanies();
-}, []); 
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:5050/orderManagement/companies",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "Application/json",
+            },
+          }
+        );
+        const data = await res.json();
+        if (data.success) setCompanies(data.data);
+      } catch (err) {
+        console.error("Error fetching companies:", err);
+      }
+    };
+    fetchCompanies();
+  }, []);
 
+  // Fetch products from backend
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:5050/orderManagement/products",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "Application/json",
+            },
+          }
+        );
+        const data = await res.json();
+        if (data.success) setProducts(data.data);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-// Fetch products from backend
-useEffect(() => {
-  const fetchProducts = async () => {
-    try {
-      const res = await fetch("http://localhost:5050/orderManagement/products",{
-        method:"GET",
-        headers:{
-          "Authorization": `Bearer ${token}`,
-          "Content-Type":"Application/json",
-          
-        }
-      });
-      const data = await res.json();
-      if (data.success) setProducts(data.data);
-    } catch (err) {
-      console.error("Error fetching products:", err);
-    }
-  };
-  fetchProducts();
-}, []);
-
-
-  const handleProductDetails =async(e)=>{
+  const handleProductDetails = async (e) => {
     e.preventDefault();
-    setLoading(true)
-  }
-
+    setLoading(true);
+  };
 
   const filteredCompanies = companies.filter(
     (company) =>
@@ -91,10 +92,9 @@ useEffect(() => {
     setShowUpdateModal(true);
   };
 
-   const handleAddCompanyClick = () => {
+  const handleAddCompanyClick = () => {
     setShowAddCompanyModal(true);
   };
-
 
   const addProductRow = () => {
     setOrderProducts([
@@ -131,7 +131,10 @@ useEffect(() => {
     try {
       const res = await fetch("http://localhost:5050/orderManagement/orders", {
         method: "POST",
-        headers: {"Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       });
       const data = await res.json();
@@ -151,27 +154,44 @@ useEffect(() => {
     }
   };
 
-
   const handleSubmitUpdate = async (e) => {
   e.preventDefault();
   setLoading(true);
 
   const formData = new FormData(e.target);
-    console.log(formData)
+
   try {
     const res = await fetch(
-      `http://localhost:5050/api/companies/${selectedCompany._id}`,
+      `http://localhost:5050/orderManagement/companies/${selectedCompany._id}`,
       {
         method: "PUT",
-        headers:{
-          "Authorization": `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       }
     );
     const data = await res.json();
+    console.log("Update response:", data);
+
     if (data.success) {
       alert("Company updated successfully!");
+
+      // ✅ Refresh companies list to reflect the latest data
+      const companiesRes = await fetch(
+        "http://localhost:5050/orderManagement/companies",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const companiesData = await companiesRes.json();
+      if (companiesData.success) {
+        setCompanies(companiesData.data);
+      }
+
+      // ✅ Close modal
       setShowUpdateModal(false);
     } else {
       alert(data.message || "Error updating company");
@@ -184,35 +204,39 @@ useEffect(() => {
   }
 };
 
-const handleSubmitAddCompany = async (e) => {
+
+  const handleSubmitAddCompany = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     const formData = new FormData(e.target);
 
     try {
-      const res = await fetch("http://localhost:5050/orderManagement/companies", {
-        method: "POST",
-        headers:{
-          "Authorization": `Bearer ${token}`,
-        },
-        body: formData,
-      });
+      const res = await fetch(
+        "http://localhost:5050/orderManagement/companies",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
       const data = await res.json();
       if (data.success) {
         alert("Company added successfully!");
         setShowAddCompanyModal(false);
         // Refresh companies list
-        const companiesRes = await fetch("http://localhost:5050/orderManagement/companies",{
-          
-        method:"GET",
-        headers:{
-         "Authorization": `Bearer ${token}`,
-         "Content-Type":"Application/json"
-        }
-        
-      
-        });
+        const companiesRes = await fetch(
+          "http://localhost:5050/orderManagement/companies",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "Application/json",
+            },
+          }
+        );
         const companiesData = await companiesRes.json();
         if (companiesData.success) setCompanies(companiesData.data);
       } else {
@@ -225,7 +249,6 @@ const handleSubmitAddCompany = async (e) => {
       setLoading(false);
     }
   };
-
 
   const generateOrderPDF = () => {
     const orderData = `
@@ -316,18 +339,18 @@ Generated on: ${new Date().toLocaleString()}
               className="search-input"
             />
           </div>
-           <button
-              className="btn btn-primary add-company-btn"
-              onClick={handleAddCompanyClick}
-            >
-              <Plus size={16} />
-              Add Company
-            </button>
+          <button
+            className="btn btn-primary add-company-btn"
+            onClick={handleAddCompanyClick}
+          >
+            <Plus size={16} />
+            Add Company
+          </button>
         </div>
 
         <div className="companies-grid">
           {filteredCompanies.map((company) => (
-            <div key={company.id} className="company-card">
+            <div key={company._id} className="company-card">
               <div className="company-header">
                 <div className="company-info">
                   <div className="company-icon">
@@ -360,7 +383,6 @@ Generated on: ${new Date().toLocaleString()}
                   <strong>Address:</strong>
                   <span>{company.address}</span>
                 </div>
-                
               </div>
 
               <div className="company-actions">
@@ -371,6 +393,7 @@ Generated on: ${new Date().toLocaleString()}
                   <FileText size={16} />
                   Create Order
                 </button>
+               
                 <button
                   className="btn btn-secondary"
                   onClick={() => handleUpdateClick(company)}
@@ -472,7 +495,9 @@ Generated on: ${new Date().toLocaleString()}
                   required
                   defaultValue=""
                 >
-                  <option value="" disabled>Select company type</option>
+                  <option value="" disabled>
+                    Select company type
+                  </option>
                   <option value="Technology">Technology</option>
                   <option value="Retail">Retail</option>
                   <option value="Manufacturing">Manufacturing</option>
@@ -501,7 +526,11 @@ Generated on: ${new Date().toLocaleString()}
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
                   {loading ? "Adding..." : "Add Company"}
                 </button>
               </div>
@@ -641,6 +670,7 @@ Generated on: ${new Date().toLocaleString()}
                 <label>Company Name</label>
                 <input
                   type="text"
+                  name="name"
                   defaultValue={selectedCompany?.name}
                   className="form-input"
                 />
@@ -649,6 +679,7 @@ Generated on: ${new Date().toLocaleString()}
                 <label>Contact Person</label>
                 <input
                   type="text"
+                  name="contact"
                   defaultValue={selectedCompany?.contact}
                   className="form-input"
                 />
@@ -657,6 +688,7 @@ Generated on: ${new Date().toLocaleString()}
                 <label>Email</label>
                 <input
                   type="email"
+                  name="email"
                   defaultValue={selectedCompany?.email}
                   className="form-input"
                 />
@@ -665,6 +697,7 @@ Generated on: ${new Date().toLocaleString()}
                 <label>Phone</label>
                 <input
                   type="tel"
+                  name="phone"
                   defaultValue={selectedCompany?.phone}
                   className="form-input"
                 />
@@ -672,22 +705,20 @@ Generated on: ${new Date().toLocaleString()}
               <div className="form-group">
                 <label>GSTIN</label>
                 <input
-                  type="Text"
+                  type="text"
+                  name="GSTIN"
                   defaultValue={selectedCompany?.GSTIN}
                   className="form-input"
                 />
               </div>
               <div className="form-group">
                 <label>Document</label>
-                <input
-                  type="File"
-                  
-                  className="form-input"
-                />
+                <input type="file" name="document" className="form-input" />
               </div>
               <div className="form-group">
                 <label>Address</label>
                 <textarea
+                  name="address"
                   defaultValue={selectedCompany?.address}
                   className="form-input"
                   rows="3"
@@ -696,6 +727,7 @@ Generated on: ${new Date().toLocaleString()}
               <div className="form-group">
                 <label>Company Type</label>
                 <select
+                  name="type"
                   defaultValue={selectedCompany?.type}
                   className="form-input"
                 >
@@ -710,6 +742,7 @@ Generated on: ${new Date().toLocaleString()}
               <div className="form-group">
                 <label>Status</label>
                 <select
+                  name="status"
                   defaultValue={selectedCompany?.status}
                   className="form-input"
                 >
@@ -717,20 +750,24 @@ Generated on: ${new Date().toLocaleString()}
                   <option value="inactive">Inactive</option>
                 </select>
               </div>
-
-              <div className="form-actions">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => setShowUpdateModal(false)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
-                  {loading ? "Updating..." : "Update Details"}
-                </button>
-              </div>
+               <div className="form-actions">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => setShowUpdateModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {loading ? "Updating..." : "Update Details"}
+              </button>
+            </div>
             </form>
+           
           </div>
         </div>
       )}

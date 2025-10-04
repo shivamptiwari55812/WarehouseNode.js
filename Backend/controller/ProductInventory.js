@@ -26,6 +26,7 @@ export const AddProduct = async (req, res) => {
     ) {
       return res.status(403).json({ message: "All fields are required" });
     }
+    
     const product = await Product.create({
       id,
       name,
@@ -38,6 +39,7 @@ export const AddProduct = async (req, res) => {
       location,
       status,
     });
+    console.log(product)
     return res
       .status(200)
       .json({ message: "Product added successfully", product });

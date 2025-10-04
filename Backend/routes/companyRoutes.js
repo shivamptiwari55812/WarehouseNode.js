@@ -9,6 +9,7 @@ import {
   deleteCompany
 } from '../controller/companyController.js';
 
+import { authenticateToken } from "../Utilities&MiddleWare/jwt.js";
 import { companyValidation } from '../Utilities&MiddleWare/validation.js';
 import upload from '../Utilities&MiddleWare/fileUpload.js';
 
@@ -18,13 +19,13 @@ import upload from '../Utilities&MiddleWare/fileUpload.js';
 router.get('/', getAllCompanies);
 
 // GET single company → GET /order-management/companies/:id
-router.get('/:id', getCompanyById);
+router.get('/:id',  getCompanyById);
 
 // POST new company → POST /order-management/companies
 router.post('/', upload.single('document'), companyValidation, createCompany);
 
 // PUT update company → PUT /order-management/companies/:id
-router.put('/:id', upload.single('document'), companyValidation, updateCompany);
+router.put('/:id',  upload.single('document'), companyValidation, updateCompany);
 
 // DELETE company → DELETE /order-management/companies/:id
 router.delete('/:id', deleteCompany);
