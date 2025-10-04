@@ -28,6 +28,13 @@ function AuthLayout({ children }) {
     </>
   );
 }
+function QrScanner({}){
+  return(
+    <>
+      <BarcodeScanner />
+    </>
+  )
+}
 
 // Router setup
 const router = createBrowserRouter([
@@ -37,11 +44,12 @@ const router = createBrowserRouter([
   { path: "/verify", element: <Verify /> },
   { path: "/terms-of-service", element: <TermsOfService /> },
   { path: "/privacy-policy", element: <PrivacyPolicy /> },
+  {path:"/qr-scanner",element:<QrScanner/>},
 
   // Authenticated pages
   { path: "/dashboard", element: <AuthLayout><Dashboard /></AuthLayout> },
   { path: "/inventory-management", element: <AuthLayout><InventoryManagement /></AuthLayout> },
-  { path: "/scanner", element: <AuthLayout><BarcodeScanner /></AuthLayout> },
+  
   { path: "/order-placement", element: <AuthLayout><Orderplacement /></AuthLayout> },
   { path: "/order-management", element: <AuthLayout><OrderManagement /></AuthLayout> },
   { path: "/roles", element: <AuthLayout><Roles /></AuthLayout> },

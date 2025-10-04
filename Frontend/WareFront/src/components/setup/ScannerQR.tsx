@@ -163,7 +163,7 @@ const updateInventory = async (code: string, action: "increment" | "decrement") 
 
   return (
 
-    <div className="selectOperation">
+    <div className="selectOperation "  >
       <button onClick={()=>setScannerQR(true)}>Scanner</button>
       <button onClick={()=>setScannerQR(false)}>Qr Generator</button>
     
