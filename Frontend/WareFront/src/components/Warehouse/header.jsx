@@ -16,7 +16,7 @@ function logout (){
   navigate("/Login")
 }
 const locateOrder=()=>{
-  navigate("/orderManagement")
+  navigate("/order-management")
 }
 const locateBill=()=>{
   navigate("/Bills")
@@ -25,10 +25,10 @@ const locateAnnual=()=>{
   navigate("/AnnualReports")
 }
 const locateInventory=()=>{
-  navigate("/InventoryManagement")
+  navigate("/inventory-management")
 }
 const locateToDashboard= ()=>{
-  navigate("/Dashboard")
+  navigate("/dashboard")
 }
     return(
         <>
