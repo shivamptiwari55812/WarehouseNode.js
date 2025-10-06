@@ -1,11 +1,11 @@
 import express from 'express';
 import { registration, verifyOTP, Login, resendOTP } from '../controller/authentication.js';
 import { getAnnualReport, createAnnualReport } from '../controller/annualReportController.js';
-import { AddProduct ,SendProductDetails , DeleteProduct } from '../controller/ProductInventory.js';
 import { updateStockByone } from '../controller/productController.js';
 import Product from '../model/Product.js';
 import orderManagementRouter from "./orderManagement.js";
 import dashboardRoutes from "../routes/dashboardRoutes.js";
+import inventoryRoutes from "../routes/inventoryRoutes.js";
 
 const router = express.Router();
 
@@ -18,10 +18,9 @@ router.post("/resend-otp", resendOTP);
 router.get('/annual-reports', getAnnualReport);
 router.post('/annual-reports', createAnnualReport);
 
-router.post("/products",AddProduct)
-router.get("/productDetails",SendProductDetails)
-router.delete(`/deleteProduct`,DeleteProduct)
+router.put("/:id", updateStockByone);
 
 router.use("/order-management", orderManagementRouter);
 router.use("/api/dashboard", dashboardRoutes);
+router.use("/api/inventory", inventoryRoutes);
 export default router;
