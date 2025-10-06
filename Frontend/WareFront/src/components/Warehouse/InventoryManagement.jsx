@@ -23,17 +23,21 @@ const InventoryManagement = () => {
   const [error, setError] = useState("");
 
   // Form state for adding/editing products
-  const [formData, setFormData] = useState({
-    name: "",
-    category: "",
-    stock: 0,
-    minStock: 0,
-    maxStock: 0,
-    price: 0,
-    supplier: "",
-    location: "",
-    description: "",
-  });
+ const [formData, setFormData] = useState({
+  name: "",
+  category: "",
+  stock: 0,
+  minStock: 0,
+  maxStock: 0,
+  price: 0,
+  supplier: "",
+  location: "",
+  locationRow: "",
+  locationShelf: "",
+  locationColumn: "",
+  description: "",
+});
+
 
   const categories = [
     "Electronics",
@@ -52,10 +56,10 @@ const InventoryManagement = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/products`);
+      const response = await fetch(`${API_BASE_URL}/products/getdetails`);
       if (!response.ok) throw new Error("Failed to fetch products");
       const data = await response.json();
-      setProducts(data);
+      setProducts(Array.isArray(data) ? data : data.products || []);
     } catch (err) {
       console.error(err);
       setError("Failed to load products");
@@ -67,8 +71,9 @@ const InventoryManagement = () => {
   // Add new product to backend
   const addProduct = async (data) => {
   setLoading(true);
+  console.log(data)
   try {
-    const res = await fetch(`${API_BASE_URL}/products`, {
+    const res = await fetch(`${API_BASE_URL}/products/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -77,6 +82,7 @@ const InventoryManagement = () => {
     if (!res.ok) throw new Error("Failed to add product");
 
     const newProduct = await res.json();
+    console.log(newProduct)
     setProducts((prev) => [newProduct, ...prev]);
     setShowAddModal(false);
     resetForm();
@@ -93,7 +99,7 @@ const InventoryManagement = () => {
   const updateProduct = async (productId, productData) => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
+      const response = await fetch(`${API_BASE_URL}/products/update/${productId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -104,7 +110,7 @@ const InventoryManagement = () => {
       if (!response.ok) throw new Error("Failed to update product");
       const updatedProduct = await response.json();
       setProducts((prev) =>
-        prev.map((p) => (p.id === productId ? updatedProduct : p))
+        prev.map((p) => (p._id === productId ? updatedProduct : p))
       );
       setShowEditModal(false);
       setSelectedProduct(null);
@@ -124,12 +130,12 @@ const InventoryManagement = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
+      const response = await fetch(`${API_BASE_URL}/products/delete/${productId}`, {
         method: "DELETE",
       });
 
       if (!response.ok) throw new Error("Failed to delete product");
-      setProducts((prev) => prev.filter((p) => p.id !== productId));
+      setProducts((prev) => prev.filter((p) => p._id !== productId));
     } catch (err) {
       // setError('Failed to delete product');
       console.error("Error deleting product:", err);
@@ -249,7 +255,7 @@ const InventoryManagement = () => {
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.id.toLowerCase().includes(searchTerm.toLowerCase());
+      product._id.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
       categoryFilter === "all" || product.category === categoryFilter;
     const matchesStatus =
@@ -300,7 +306,7 @@ const InventoryManagement = () => {
       "ID,Name,Category,Stock,Min Stock,Max Stock,Price,Supplier,Location,Status,Last Updated",
       ...products.map(
         (product) =>
-          `${product.id},"${product.name}","${product.category}",${product.stock},${product.minStock},${product.maxStock},${product.price},"${product.supplier}","${product.location}","${product.status}",${product.lastUpdated}`
+          `${product._id},"${product.name}","${product.category}",${product.stock},${product.minStock},${product.maxStock},${product.price},"${product.supplier}","${product.location}","${product.status}",${product.lastUpdated}`
       ),
     ].join("\n");
 
@@ -432,13 +438,13 @@ const InventoryManagement = () => {
         ) : (
           <div className="products-grid">
             {filteredProducts.map((product) => (
-              <div key={product.id} className="product-card">
+              <div key={product._id} className="product-card">
                 <div className="product-header">
                   <div className="product-info">
                     {getStatusIcon(product.status)}
                     <div>
                       <h3>{product.name}</h3>
-                      <p className="product-id">{product.id}</p>
+                      <p className="product-id">{product._id}</p>
                     </div>
                   </div>
                   <div className={`status-badge status-${product.status}`}>
@@ -495,7 +501,7 @@ const InventoryManagement = () => {
                     <button
                       className="stock-btn decrease"
                       onClick={() =>
-                        updateStock(product.id, Math.max(0, product.stock - 1))
+                        updateStock(product._id, Math.max(0, product.stock - 1))
                       }
                       disabled={product.stock <= 0}
                     >
@@ -505,7 +511,7 @@ const InventoryManagement = () => {
                       type="number"
                       value={product.stock}
                       onChange={(e) =>
-                        updateStock(product.id, parseInt(e.target.value) || 0)
+                        updateStock(product._id, parseInt(e.target.value) || 0)
                       }
                       className="stock-input"
                       min="0"
@@ -515,7 +521,7 @@ const InventoryManagement = () => {
                       className="stock-btn increase"
                       onClick={() =>
                         updateStock(
-                          product.id,
+                          product._id,
                           Math.min(product.maxStock, product.stock + 1)
                         )
                       }
@@ -536,7 +542,7 @@ const InventoryManagement = () => {
                   </button>
                   <button
                     className="btn btn-danger"
-                    onClick={() => deleteProduct(product.id)}
+                    onClick={() => deleteProduct(product._id)}
                   >
                     <Trash2 size={16} />
                     Delete

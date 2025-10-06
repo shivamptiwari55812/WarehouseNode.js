@@ -1,12 +1,7 @@
 import express from "express";
 import {
-  getAllInventoryProducts,
-  getInventoryProductById,
-  addInventoryProduct,
-  updateInventoryProduct,
-  deleteInventoryProduct,
-  updateInventoryStockByOne,
-} from "../controller/inventoryController.js";
+  AddProduct,SendProductDetails,updateProduct,DeleteProduct
+} from "../controller/ProductInventory.js";
 import { body } from "express-validator";
 
 const router = express.Router();
@@ -23,12 +18,12 @@ const productValidationRules = [
   body("location").notEmpty().withMessage("Location is required"),
 ];
 
-// Routes
-router.get("/products", getAllInventoryProducts);
-router.get("/products/:id", getInventoryProductById);
-router.post("/products", productValidationRules, addInventoryProduct);
-router.put("/products/:id", productValidationRules, updateInventoryProduct);
-router.delete("/products/:id", deleteInventoryProduct);
-router.patch("/products/:id/stock", updateInventoryStockByOne);
+
+
+router.post("/products/add", productValidationRules, AddProduct);
+router.get("/products/getdetails", SendProductDetails);
+router.put("/products/update/:id", productValidationRules, updateProduct);
+router.delete("/products/delete/:id", DeleteProduct);
+
 
 export default router;
