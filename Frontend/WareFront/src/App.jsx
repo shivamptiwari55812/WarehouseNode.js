@@ -18,6 +18,8 @@ import AnnualReports from "./components/reports/AnnualReports.jsx";
 import Bills from "./components/reports/Bills.jsx";
 import BarcodeScanner from "./components/setup/ScannerQR.tsx"
 import InventoryManagement from './components/Warehouse/InventoryManagement.jsx'
+import AdminPanel from './components/Warehouse/AdminPanel.jsx';
+
 function DashboardLayout(){
   return(
     <>
@@ -165,6 +167,9 @@ const router = createBrowserRouter([
   {
     path:'/Bills',
     element:<BillsLayout/>
+  },
+  { path: '/admin', 
+    element: <AdminPanel /> 
   }
 ])
 
