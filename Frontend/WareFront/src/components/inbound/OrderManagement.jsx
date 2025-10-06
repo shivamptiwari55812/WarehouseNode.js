@@ -48,26 +48,28 @@ const OrderManagement = () => {
 
   // Fetch products from backend
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          "http://localhost:5050/orderManagement/products",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "Application/json",
-            },
-          }
-        );
-        const data = await res.json();
-        if (data.success) setProducts(data.data);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-      }
-    };
-    fetchProducts();
-  }, []);
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:5050/api/inventory/products/getdetails",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const productsArray = await res.json(); // <-- this is already the array
+      setProducts(productsArray); // <-- set state directly
+      console.log("Products loaded:", productsArray);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+    }
+  };
+  fetchProducts();
+}, []);
+
 
   const handleProductDetails = async (e) => {
     e.preventDefault();
@@ -265,7 +267,7 @@ Document: ${selectedCompany.document}
 PRODUCTS:
 ${orderProducts
   .map((product, index) => {
-    const productInfo = products.find((p) => p.id === product.productId);
+    const productInfo = products.find((p) => p._id === product.productId);
     return `${index + 1}. ${
       productInfo?.name || "Unknown Product"
     } - Quantity: ${product.quantity}${
@@ -560,20 +562,23 @@ Generated on: ${new Date().toLocaleString()}
                   <div key={index} className="product-row">
                     <div className="form-group">
                       <label>Product</label>
-                      <select
-                        value={product.productId}
-                        onChange={(e) =>
-                          updateProductRow(index, "productId", e.target.value)
-                        }
-                        required
-                      >
-                        <option value="">Select Product</option>
-                        {products.map((p) => (
-                          <option key={p.id} value={p.id}>
-                            {p.name} - ${p.price} (Stock: {p.stock})
-                          </option>
-                        ))}
-                      </select>
+                     <select
+  value={product.productId}
+  onChange={(e) => updateProductRow(index, "productId", e.target.value)}
+  required
+>
+  <option value="">Select Product</option>
+  {products.length === 0 ? (
+    <option disabled>Loading products...</option>
+  ) : (
+    products.map((p) => (
+      <option key={p._id} value={p._id}>
+        {p.name} - ${p.price} (Stock: {p.stock})
+      </option>
+    ))
+  )}
+</select>
+
                     </div>
                     <div className="form-group">
                       <label>Quantity</label>

@@ -52,6 +52,7 @@ export const AddProduct = async (req, res) => {
 export const SendProductDetails = async (req, res) => {
   try {
     const productData = await Product.find();
+    console.log(productData)
     return res.status(200).json(productData);
   } catch (err) {
     return res.status(500).json({ message: err.message });
