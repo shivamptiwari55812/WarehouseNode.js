@@ -18,6 +18,8 @@ import AnnualReports from "./components/reports/AnnualReports.jsx";
 import Bills from "./components/reports/Bills.jsx";
 import BarcodeScanner from "./components/setup/ScannerQR.tsx";
 import InventoryManagement from './components/Warehouse/InventoryManagement.jsx';
+import AddReport from './components/reports/AddReport.jsx';
+
 
 // Layout for pages with Header
 function AuthLayout({ children }) {
@@ -45,6 +47,8 @@ const router = createBrowserRouter([
   { path: "/terms-of-service", element: <TermsOfService /> },
   { path: "/privacy-policy", element: <PrivacyPolicy /> },
   {path:"/qr-scanner",element:<QrScanner/>},
+  { path: "/add-report", element: <AuthLayout><AddReport /></AuthLayout> },
+
 
   // Authenticated pages
   { path: "/dashboard", element: <AuthLayout><Dashboard /></AuthLayout> },
