@@ -45,7 +45,8 @@ const InventoryManagement = () => {
   ];
 
   // Frontend API functions for backend integration
-  const API_BASE_URL = "http://localhost:5050/api"; // Replace with your backend URL
+  const API_BASE_URL = "http://localhost:5050/api/inventory";
+ // Replace with your backend URL
 
   // Fetch all products from backend
   const fetchProducts = async () => {
@@ -56,40 +57,37 @@ const InventoryManagement = () => {
       const data = await response.json();
       setProducts(data);
     } catch (err) {
-      // setError('Failed to load products');
-      console.error("Error fetching products:", err);
-      // Fallback to mock data for demo
-      setProducts(mockProducts);
+      console.error(err);
+      setError("Failed to load products");
     } finally {
       setLoading(false);
     }
   };
 
   // Add new product to backend
-  const addProduct = async (productData) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_BASE_URL}/products`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(productData),
-      });
+  const addProduct = async (data) => {
+  setLoading(true);
+  try {
+    const res = await fetch(`${API_BASE_URL}/products`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-      if (!response.ok) throw new Error("Failed to add product");
-      const newProduct = await response.json();
-      console.log(newProduct);
-      setProducts((prev) => [...prev, newProduct]);
-      setShowAddModal(false);
-      resetForm();
-    } catch (err) {
-      // setError('Failed to add product');
-      console.error("Error adding product:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (!res.ok) throw new Error("Failed to add product");
+
+    const newProduct = await res.json();
+    setProducts((prev) => [newProduct, ...prev]);
+    setShowAddModal(false);
+    resetForm();
+  } catch (err) {
+    console.error("Add product error:", err);
+    setError(err.message || "Failed to add product");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Update product in backend
   const updateProduct = async (productId, productData) => {
@@ -165,66 +163,6 @@ const InventoryManagement = () => {
     }
   };
 
-  // Mock data for demo purposes
-  const mockProducts = [
-    {
-      id: "P001",
-      name: "iPhone 15 Pro",
-      category: "Electronics",
-      stock: 245,
-      minStock: 50,
-      maxStock: 500,
-      price: 999.99,
-      supplier: "Apple Inc.",
-      location: "A1-B2-C3",
-      description: "Latest iPhone model with advanced features",
-      status: "in-stock",
-      lastUpdated: "2024-01-15",
-    },
-    {
-      id: "P002",
-      name: "Samsung Galaxy S24",
-      category: "Electronics",
-      stock: 12,
-      minStock: 20,
-      maxStock: 300,
-      price: 899.99,
-      supplier: "Samsung Electronics",
-      location: "A1-B2-C4",
-      description: "Premium Android smartphone",
-      status: "low-stock",
-      lastUpdated: "2024-01-14",
-    },
-    {
-      id: "P003",
-      name: "Nike Air Max 270",
-      category: "Sports",
-      stock: 0,
-      minStock: 30,
-      maxStock: 400,
-      price: 150.0,
-      supplier: "Nike Inc.",
-      location: "B2-C1-D2",
-      description: "Comfortable running shoes",
-      status: "out-of-stock",
-      lastUpdated: "2024-01-10",
-    },
-    {
-      id: "P004",
-      name: "Levi's 501 Jeans",
-      category: "Clothing",
-      stock: 89,
-      minStock: 25,
-      maxStock: 200,
-      price: 79.99,
-      supplier: "Levi Strauss & Co.",
-      location: "C1-D2-E1",
-      description: "Classic straight-fit jeans",
-      status: "in-stock",
-      lastUpdated: "2024-01-12",
-    },
-  ];
-
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -244,35 +182,37 @@ const InventoryManagement = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value, type } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "number" ? parseFloat(value) || 0 : value,
-    }));
-  };
+  const { name, value, type } = e.target;
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]:
+      type === "number"
+        ? value === ""
+          ? ""
+          : parseFloat(value)
+        : value,
+  }));
+};
 
   const handleSubmit = (e) => {
   e.preventDefault();
 
-  const finalLocation = `${formData.locationRow || ""}-${formData.locationShelf || ""}-${formData.locationColumn || ""}`;
-
   const productData = {
     ...formData,
-    location: finalLocation,
-    id: selectedProduct ? selectedProduct.id : `P${Date.now()}`,
+    productId: `P${Date.now()}`, // create a unique ID
     status:
       formData.stock > formData.minStock
         ? "in-stock"
         : formData.stock > 0
         ? "low-stock"
         : "out-of-stock",
-    lastUpdated: new Date().toISOString().split("T")[0],
   };
 
   if (selectedProduct) {
-    updateProduct(selectedProduct.id, productData);
+    updateProduct(selectedProduct._id, productData); // for edit
   } else {
-    addProduct(productData);
+    addProduct(productData); // for add
   }
 };
 
@@ -389,11 +329,16 @@ const InventoryManagement = () => {
           </button>
           <button
             className="btn btn-primary"
-            onClick={() => setShowAddModal(true)}
+            onClick={() => {
+              setSelectedProduct(null); // reset for adding
+              resetForm();              // clear form
+              setShowAddModal(true);
+            }}
           >
             <Plus size={20} />
             Add Product
           </button>
+
         </div>
       </div>
 
