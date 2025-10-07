@@ -15,7 +15,7 @@ const invoiceSchema = new mongoose.Schema({
     },
     warehouse: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "warehouseModel",
+        ref: "WarehouseModel",
         required: true,
     },
 },{timestamps:true});

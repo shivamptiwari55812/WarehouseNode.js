@@ -45,6 +45,7 @@ const router = createBrowserRouter([
   { path: "/terms-of-service", element: <TermsOfService /> },
   { path: "/privacy-policy", element: <PrivacyPolicy /> },
   {path:"/qr-scanner",element:<QrScanner/>},
+  {path:"/setWarehouse",element:<WarehouseDetails/>},
 
   // Authenticated pages
   { path: "/dashboard", element: <AuthLayout><Dashboard /></AuthLayout> },

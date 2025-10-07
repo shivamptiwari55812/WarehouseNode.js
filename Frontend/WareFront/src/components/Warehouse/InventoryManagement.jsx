@@ -38,7 +38,7 @@ const InventoryManagement = () => {
   description: "",
 });
 
-
+const token = localStorage.getItem("token")
   const categories = [
     "Electronics",
     "Clothing",
@@ -54,19 +54,24 @@ const InventoryManagement = () => {
 
   // Fetch all products from backend
   const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_BASE_URL}/products/getdetails`);
-      if (!response.ok) throw new Error("Failed to fetch products");
-      const data = await response.json();
-      setProducts(Array.isArray(data) ? data : data.products || []);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load products");
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  try {
+    const response = await fetch(`${API_BASE_URL}/products/getdetails`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch products");
+
+    const data = await response.json();
+    setProducts(data); // directly set the array
+  } catch (err) {
+    console.error(err);
+    setError("Failed to load products");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Add new product to backend
   const addProduct = async (data) => {
@@ -75,7 +80,7 @@ const InventoryManagement = () => {
   try {
     const res = await fetch(`${API_BASE_URL}/products/add`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json",Authorization: `Bearer ${token}`, },
       body: JSON.stringify(data),
     });
 
@@ -83,7 +88,7 @@ const InventoryManagement = () => {
 
     const newProduct = await res.json();
     console.log(newProduct)
-    setProducts((prev) => [newProduct, ...prev]);
+    setProducts(data)
     setShowAddModal(false);
     resetForm();
   } catch (err) {
@@ -102,6 +107,7 @@ const InventoryManagement = () => {
       const response = await fetch(`${API_BASE_URL}/products/update/${productId}`, {
         method: "PUT",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(productData),
@@ -132,6 +138,10 @@ const InventoryManagement = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/products/delete/${productId}`, {
         method: "DELETE",
+        headers:{
+          Authorization: `Bearer ${token}`,
+
+        }
       });
 
       if (!response.ok) throw new Error("Failed to delete product");
@@ -152,6 +162,7 @@ const InventoryManagement = () => {
         {
           method: "PATCH",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ stock: newStock }),

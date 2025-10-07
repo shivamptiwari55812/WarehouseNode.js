@@ -30,8 +30,9 @@ try{
 
         
        localStorage.setItem("token",result.token)
+       navigate("/dashboard")
         if(result.userType === 'warehouse'){
-        navigate('/Roles');  
+        navigate('/dashboard');  
     } else if(result.userType === 'client'){
         navigate('/WarehouseDetailsForm'); 
     }

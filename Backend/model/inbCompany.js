@@ -23,10 +23,10 @@ const InboundCompany = new mongoose.Schema({
         type: String, 
         required: true,
     },
-    warehouse: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "warehouseModel",
-        required: true,
+    user: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "User",  // <- foreign key points to User model
+      required: true
     },
 },{timestamps:true})
 

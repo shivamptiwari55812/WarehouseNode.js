@@ -22,65 +22,93 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onBack }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [ScannerQR,setScannerQR] = useState(false)
   const [productDetails, setProductDetails] = useState<any>(null);
+  const token = localStorage.getItem("token");
 const handleScan = (result: any | null) => {
   if (result && result.length > 0) {
-    const code = result[0].rawValue;
-    console.log("Scanned result:", code);
+    const code = result[0].rawValue; // this must be the ObjectId
+    console.log("Scanned product ID:", code);
 
-    setScannedResult(code);
+    setScannedResult(code); // optional for UI display
     setIsScanning(false);
 
-    fetchDetailsOfData(code);
+    fetchDetailsOfData(code); // fetch product details
 
     const action = isAdding ? "increment" : "decrement";
-    updateInventory(code, action);
+    updateInventory(code, action); // backend uses this _id
   }
 };
 
-const updateInventory = async (code: string, action: "increment" | "decrement") => {
+
+
+const updateInventory = async (id: string, action: "increment" | "decrement") => {
   try {
     const response = await fetch(
-      `http://localhost:5050/api/${code}`,
+      `http://localhost:5050/api/inventory/products/updates/${id}`,
       {
         method: "PUT",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ action })
+        body: JSON.stringify({ action }),
       }
     );
 
-    const result = await response.json();
-    console.log("Update response:", result);
+    const contentType = response.headers.get("content-type");
+    let result: any;
+    if (contentType && contentType.includes("application/json")) {
+      result = await response.json();
+    } else {
+      console.warn("Unexpected response type:", contentType);
+      return false;
+    }
+
+    if (response.ok) {
+  console.log("✅ Product updated:", result);
+
+  
+  setProductDetails(result.data);
+
+  
+  setProducts((prev) =>
+    prev.map((p) => (p._id === result._id ? result : p))
+  );
+
+  return true;
+}
+ else {
+      console.error("❌ Update failed:", result);
+      return false;
+    }
   } catch (error) {
     console.error("Update failed:", error);
+    return false;
   }
 };
 
   const handleButton = () => {};
   const fetchDetailsOfData = async (id: string) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5050/orderManagement/products/${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const result = await response.json();
-      if (response.ok) {
-        console.log("Raw fetch result:", result);
-        setProductDetails(result.data);
-      } else {
-        console.log("Error:", response.status, result);
-        setProductDetails(null);
+  try {
+    const response = await fetch(
+      `http://localhost:5050/api/inventory/products/getdetails/${id}`, // GET route for single product
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
-    } catch (error) {
-      console.log(error);
+    );
+    const result = await response.json();
+    if (response.ok) {
+      setProductDetails(result.data);
+    } else {
+      setProductDetails(null);
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
   const handleError = (err: any) => {
     console.error("Scanner error:", err);
@@ -119,9 +147,10 @@ const updateInventory = async (code: string, action: "increment" | "decrement") 
   const qrRef = useRef<HTMLDivElement | null>(null);
 
   const handleGenerateQR = (prod: Product) => {
-    setSelectedQR(`${prod._id} - ${prod.name}`);
+    setSelectedQR(`${prod._id}`);
   };
 
+ 
   const handleDownload = async () => {
     if (!qrRef.current || !selectedQR) return;
 
@@ -145,14 +174,18 @@ const updateInventory = async (code: string, action: "increment" | "decrement") 
       try {
         console.log("Fetching products...");
         const response = await fetch(
-          "http://localhost:5050/orderManagement/products"
+          "http://localhost:5050/api/inventory/products/getdetails",{
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
+          }
         );
         if (!response.ok) throw new Error("Failed to fetch products");
 
         const resData = await response.json();
         console.log("Data received:", resData);
 
-        setProducts(Array.isArray(resData.data) ? resData.data : []);
+        setProducts(resData);
       } catch (error) {
         console.error("Error fetching product details:", error);
       }

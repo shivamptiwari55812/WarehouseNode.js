@@ -6,7 +6,7 @@ import Product from '../model/Product.js';
 import orderManagementRouter from "./orderManagement.js";
 import dashboardRoutes from "../routes/dashboardRoutes.js";
 import inventoryRoutes from "../routes/inventoryRoutes.js";
-
+import warehouse from "../routes/warehouseRoutes.js";
 const router = express.Router();
 
 
@@ -23,7 +23,7 @@ router.post('/annual-reports', createAnnualReport);
 router.use("/order-management", orderManagementRouter);
 router.use("/api/dashboard", dashboardRoutes);
 router.use("/inventory", inventoryRoutes);
-
+router.use("/warehouse", warehouse);
 
 
 

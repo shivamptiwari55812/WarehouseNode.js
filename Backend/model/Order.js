@@ -87,8 +87,12 @@ const orderSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
-  }
-});
+  },
+user: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "User",  // <- foreign key points to User model
+      required: true
+    },});
 
 orderSchema.pre('save', function (next) {
   this.updatedAt = Date.now();

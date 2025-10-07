@@ -16,25 +16,26 @@ import {
   getOrderStats
 } from '../controller/orderController.js';
 import { orderValidation } from '../Utilities&MiddleWare/orderValidation.js';
+import { authenticateToken } from "../Utilities&MiddleWare/jwt.js";
 import upload from '../Utilities&MiddleWare/fileUpload.js';
 
 // Create new order → POST /order-management/orders
-router.post('/', upload.array('documents'), orderValidation, createOrder);
+router.post('/', upload.array('documents'),authenticateToken, orderValidation, createOrder);
 
 // Get all orders → GET /order-management/orders
-router.get('/', getAllOrders);
+router.get('/', authenticateToken,getAllOrders);
 
 // Get single order → GET /order-management/orders/:id
-router.get('/:id', getOrderById);
+router.get('/:id',authenticateToken, getOrderById);
 
 // Update order status → PUT /order-management/orders/:id/status
-router.put('/:id/status', updateOrderStatus);
+router.put('/:id/status',authenticateToken, updateOrderStatus);
 
 // Delete order → DELETE /order-management/orders/:id
-router.delete('/:id', deleteOrder);
+router.delete('/:id', authenticateToken,deleteOrder);
 
 // Order statistics → GET /order-management/orders-stats
-router.get('/stats', getOrderStats);
+router.get('/stats',authenticateToken, getOrderStats);
 
 // Generate & upload invoice PDF
 // ✅ Add this route at the end (or anywhere after imports and before export)

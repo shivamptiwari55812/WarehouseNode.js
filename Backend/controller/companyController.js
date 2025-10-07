@@ -26,7 +26,10 @@ export const getAllCompanies = async (req, res) => {
       query.status = status;
     }
 
-    const companies = await Company.find(query).sort({ createdAt: -1 });
+const companies = await Company.find({
+  user: req.user.id,  // <- only fetch companies for this user
+  ...query            // include search/type/status filters
+}).sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -46,7 +49,10 @@ export const getAllCompanies = async (req, res) => {
 // Get single company
 export const getCompanyById = async (req, res) => {
   try {
-    const company = await Company.findById(req.params.id);
+const company = await Company.findOne({
+  _id: req.params.id,
+  user: req.user.id 
+});
 
     if (!company) {
       return res.status(404).json({
@@ -71,6 +77,8 @@ export const getCompanyById = async (req, res) => {
 // Create new company
 export const createCompany = async (req, res) => {
   try {
+    console.log('req.user:', req.user); // debug before creating company
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -87,7 +95,10 @@ export const createCompany = async (req, res) => {
       companyData.document = req.file.path;
     }
 
-    const company = await Company.create(companyData);
+const company = await Company.create({
+  ...companyData,          // all other fields from req.body
+ user:req.user.id // attach warehouse here
+});
 
     res.status(201).json({
       success: true,
@@ -136,11 +147,12 @@ console.log("🆔 ID to Update:", req.params.id);
 
     updateData.updatedAt = new Date();
 
-    const company = await Company.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true, runValidators: true }
-    );
+    const company = await Company.findOneAndUpdate(
+  { _id: req.params.id, user: req.user.id }, // restrict to this user
+  updateData,
+  { new: true, runValidators: true }
+);
+
      console.log("Updated Company:", company);
     if (!company) {
       return res.status(404).json({
@@ -182,7 +194,10 @@ export const deleteCompany = async (req, res) => {
       });
     }
 
-    const company = await Company.findByIdAndDelete(req.params.id);
+const company = await Company.findOneAndDelete({
+  _id: req.params.id,
+  user: req.user.id // <- only delete own companies
+});
 
     if (!company) {
       return res.status(404).json({

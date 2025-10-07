@@ -7,6 +7,7 @@ const annualReportSchema = new mongoose.Schema({
   orders: { type: Number, required: true },
   itemsShipped: { type: Number, required: true },
   growthRate: { type: Number, required: true },
+   warehouse: { type: mongoose.Schema.Types.ObjectId, ref: "WarehouseModel", required: true },
 });
 
 const AnnualReport = mongoose.model("AnnualReport", annualReportSchema);

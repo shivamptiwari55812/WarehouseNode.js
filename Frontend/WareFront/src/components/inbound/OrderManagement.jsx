@@ -24,6 +24,8 @@ const OrderManagement = () => {
   const [companies, setCompanies] = useState([]);
   const [products, setProducts] = useState([]);
   const token = localStorage.getItem("token");
+  console.log(localStorage.getItem("token"))
+
   useEffect(() => {
     const fetchCompanies = async () => {
       try {

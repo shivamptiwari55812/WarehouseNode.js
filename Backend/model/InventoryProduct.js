@@ -20,7 +20,11 @@ const inventorySchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   lastUpdated: { type: String }, // YYYY-MM-DD
-});
+user: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "User",  // <- foreign key points to User model
+      required: true
+    },});
 
 // Update `updatedAt` and `status` before save
 inventorySchema.pre("save", function (next) {

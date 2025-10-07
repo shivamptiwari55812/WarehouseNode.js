@@ -43,7 +43,7 @@ const verify = () => {
      
       console.log(result);
       // localStorage.setItem("token")
-      navigate("/Dashboard");
+      navigate("/setWarehouse");
     }
     else{
       alert("You have entered a wrong OTP")

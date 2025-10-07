@@ -22,6 +22,7 @@ export function Dashboard ()  {
   const [orders, setOrders] = useState([]);
   const [loadingInvoice, setLoadingInvoice] = useState({});
 
+  // console.log(localStorage.getItem(token))
   // Fetch data from backend
   useEffect(() => {
     fetch("http://localhost:5050/order-management/summary")

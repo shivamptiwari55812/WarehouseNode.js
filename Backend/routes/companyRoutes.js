@@ -16,18 +16,18 @@ import upload from '../Utilities&MiddleWare/fileUpload.js';
 // Company routes
 
 // GET all companies → GET /order-management/companies
-router.get('/', getAllCompanies);
+router.get('/',authenticateToken, getAllCompanies);
 
 // GET single company → GET /order-management/companies/:id
-router.get('/:id',  getCompanyById);
+router.get('/:id',authenticateToken,  getCompanyById);
 
 // POST new company → POST /order-management/companies
-router.post('/', upload.single('document'), companyValidation, createCompany);
+router.post('/', upload.single('document'), authenticateToken,companyValidation, createCompany);
 
 // PUT update company → PUT /order-management/companies/:id
-router.put('/:id',  upload.single('document'), companyValidation, updateCompany);
+router.put('/:id',  upload.single('document'),authenticateToken, companyValidation, updateCompany);
 
 // DELETE company → DELETE /order-management/companies/:id
-router.delete('/:id', deleteCompany);
+router.delete('/:id', authenticateToken,deleteCompany);
 
 export default router;

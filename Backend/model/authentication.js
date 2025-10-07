@@ -20,6 +20,11 @@ const authentication = new mongoose.Schema({
         type: String,
         required: true,
     },
+    user: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "User",  // <- foreign key points to User model
+      required: true
+    },
    
     
 },{timestamps:true});
@@ -40,6 +45,7 @@ const newUser = new mongoose.Schema({
         type: String,
         required: true,
     },
+      
     isVerified: { type: Boolean, default: false }
     
 },{timestamps:true});
@@ -55,6 +61,7 @@ const otp = new mongoose.Schema({
         type:String,
         required:true,
     },
+    
     resendCount: { type: Number, default: 0 }  // track max resend
 }, { timestamps: true });
 
@@ -63,6 +70,6 @@ const otp = new mongoose.Schema({
 
 
 
-export const newUser1 = mongoose.model("newUser1", newUser);
+export const User = mongoose.model("User", newUser);
 export const Authentication = mongoose.model("Authentication", authentication);
 export const otpDB = mongoose.model("otp_generate_and_save",otp);

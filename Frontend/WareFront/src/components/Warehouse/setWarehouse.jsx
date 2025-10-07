@@ -1,114 +1,251 @@
-import {useState} from "react"
-import { useNavigate } from 'react-router-dom';
-import '../../cssfiles/warehouse.css'
-export function WarehouseDetails(){
-    return(
-        <>
-         <div class="main-content">
-      <header class="dashboard-header">
-        <div class="header-left">
-          <h1>Register Your Warehouse!</h1>
-        </div>
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../../cssfiles/warehouse.css";
 
-      </header>
-         
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Warehouse Details</h2>
-          <p class="card-description">
-            Fill all required details for the warehouse
-          </p>
-        </div>
-        <div class="card-content">
-          <form id="warehouseForm" enctype="multipart/form-data" method="post">
-            <div class="form-grid">
-             
-              <div class="form-group">
-                <label for="WarehouseCompany_Name">Warehouse Name</label>
-                <input id="WarehouseCompany_Name" type="text" required placeholder="Enter warehouse name" class="form-input"/>
-                <p id="WarehouseCompanyNameError" class="error-message"></p>
-              </div>
-        
-              
-              <div class="form-group">
-                <label for="WarehouseCompany_Address">Warehouse Address</label>
-                <input id="WarehouseCompany_Address" type="text" required placeholder="Enter warehouse address" class="form-input"/>
-                <p id="WarehouseCompanyAddressError" class="error-message"></p>
-              </div>
-        
-              
-              <div class="form-group">
-                <label for="WarehouseCompany_City">Warehouse City</label>
-                <input id="WarehouseCompany_City" type="text" required placeholder="Enter warehouse city" class="form-input"/>
-                <p id="WarehouseCompanyCityError" class="error-message"></p>
-              </div>
-        
-             
-              <div class="form-group">
-                <label for="WarehouseCompany_GSTIN">Warehouse GSTIN</label>
-                <input id="WarehouseCompany_GSTIN" type="text" required placeholder="Enter GSTIN" class="form-input"/>
-                <p id="WarehouseCompanyGSTINError" class="error-message"></p>
-              </div>
-        
-              
-              <div class="form-group">
-                <label for="WarehouseCompany_State">Warehouse State</label>
-                <input id="WarehouseCompany_State" type="text" required placeholder="Enter warehouse state" class="form-input"/>
-                <p id="WarehouseCompanyStateError" class="error-message"></p>
-              </div>
-        
-             
-              <div class="form-group">
-                <label for="WarehouseCompany_Pincode">Warehouse Pincode</label>
-                <input id="WarehouseCompany_Pincode" type="number" required placeholder="Enter pincode" class="form-input"/>
-                <p id="WarehouseCompanyPincodeError" class="error-message"></p>
-              </div>
-        
-          
-              <div class="form-group">
-                <label for="WarehouseCompany_Contact">Warehouse Contact</label>
-                <input id="WarehouseCompany_Contact" type="text" required placeholder="Enter contact number" class="form-input"/>
-                <p id="WarehouseCompanyContactError" class="error-message"></p>
-              </div>
-        
-              
-              <div class="form-group">
-                <label for="WarehouseCompany_Email">Warehouse Email</label>
-                <input id="WarehouseCompany_Email" type="email" required placeholder="Enter email address" class="form-input"/>
-                <p id="WarehouseCompanyEmailError" class="error-message"></p>
-              </div>
-        
-              
-              <div class="form-group">
-                <label for="WarehouseCompany_Type">Warehouse Type</label>
-                <select id="WarehouseCompany_Type" required>
-                    <option value="">Select Type</option>
-                    <option value="Shipping">Shipping</option>
-                    <option value="Ecommerce">E-commerce</option>
-                </select>
-                <p id="WarehouseCompanyTypeError" class="error-message"></p>
+export function WarehouseDetails() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    WarehouseCompany_Name: "",
+    WarehouseCompany_Address: "",
+    WarehouseCompany_City: "",
+    WarehouseCompany_GSTIN: "",
+    WarehouseCompany_State: "",
+    WarehouseCompany_Pincode: "",
+    WarehouseCompany_Contact: "",
+    WarehouseCompany_Email: "",
+    WarehouseCompany_Type: "Shipping",
+  });
+
+  const token =localStorage.getItem("token")
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  // console.log(token)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const submitData = new FormData();
+
+      Object.entries(formData).forEach(([key, value]) => {
+        submitData.append(key, value);
+      });
+
+      console.log(token)
+      const response = await fetch("http://localhost:5050/api/warehouse/add", {
+        method:"POST",
+         headers: { "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          },
+      body: JSON.stringify(formData), 
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Warehouse registered successfully!");
+        navigate("/dashboard");
+      } else {
+        alert(`Registration failed: ${result.message || "Unknown error"}`);
+      }
+    } catch (error) {
+      alert(`Error: ${error.message || "Network error"}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    if (window.confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
+      navigate("/dashboard");
+    }
+  };
+
+  return (
+    <div className="warehouse-container">
+      <div className="warehouse-form-wrapper">
+        <h1 className="warehouse-title">Warehouse Registration</h1>
+
+        <form
+          className="warehouse-form"
+          onSubmit={handleSubmit}
+        >
+          <div className="form-group">
+            <label htmlFor="WarehouseCompany_Name" className="form-label">
+              Company Name *
+            </label>
+            <input
+              type="text"
+              id="WarehouseCompany_Name"
+              name="WarehouseCompany_Name"
+              className="form-input"
+              value={formData.WarehouseCompany_Name}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="WarehouseCompany_Address" className="form-label">
+              Address *
+            </label>
+            <input
+              type="text"
+              id="WarehouseCompany_Address"
+              name="WarehouseCompany_Address"
+              className="form-input"
+              value={formData.WarehouseCompany_Address}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="WarehouseCompany_City" className="form-label">
+                City *
+              </label>
+              <input
+                type="text"
+                id="WarehouseCompany_City"
+                name="WarehouseCompany_City"
+                className="form-input"
+                value={formData.WarehouseCompany_City}
+                onChange={handleInputChange}
+                required
+              />
             </div>
-      
-        
-              
-        
-              
-              <div class="form-group">
-                <label for="WarehouseCompany_Layout">Upload Warehouse Layout</label>
-                <input id="WarehouseCompany_Layout" type="file" class=""/>
-              </div>
-        
-              <div class="button-group">
-                <button type="button" class="cancel-button">Cancel</button>
-                <button type="submit" class="save-button">Save Changes</button>
-              </div>
+
+            <div className="form-group">
+              <label htmlFor="WarehouseCompany_State" className="form-label">
+                State *
+              </label>
+              <input
+                type="text"
+                id="WarehouseCompany_State"
+                name="WarehouseCompany_State"
+                className="form-input"
+                value={formData.WarehouseCompany_State}
+                onChange={handleInputChange}
+                required
+              />
             </div>
-          </form>
-        </div>
-        
-        </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="WarehouseCompany_GSTIN" className="form-label">
+                GSTIN *
+              </label>
+              <input
+                type="text"
+                id="WarehouseCompany_GSTIN"
+                name="WarehouseCompany_GSTIN"
+                className="form-input"
+                value={formData.WarehouseCompany_GSTIN}
+                onChange={handleInputChange}
+                title="Please enter a valid GSTIN"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="WarehouseCompany_Pincode" className="form-label">
+                Pincode *
+              </label>
+              <input
+                type="text"
+                id="WarehouseCompany_Pincode"
+                name="WarehouseCompany_Pincode"
+                className="form-input"
+                value={formData.WarehouseCompany_Pincode}
+                onChange={handleInputChange}
+                pattern="[0-9]{6}"
+                title="Please enter a valid 6-digit pincode"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="WarehouseCompany_Contact" className="form-label">
+                Contact Number *
+              </label>
+              <input
+                type="tel"
+                id="WarehouseCompany_Contact"
+                name="WarehouseCompany_Contact"
+                className="form-input"
+                value={formData.WarehouseCompany_Contact}
+                onChange={handleInputChange}
+                pattern="[0-9]{10}"
+                title="Please enter a valid 10-digit phone number"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="WarehouseCompany_Email" className="form-label">
+                Email *
+              </label>
+              <input
+                type="email"
+                id="WarehouseCompany_Email"
+                name="WarehouseCompany_Email"
+                className="form-input"
+                value={formData.WarehouseCompany_Email}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="WarehouseCompany_Type" className="form-label">
+              Warehouse Type *
+            </label>
+            <select
+              id="WarehouseCompany_Type"
+              name="WarehouseCompany_Type"
+              className="form-select"
+              value={formData.WarehouseCompany_Type}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="Shipping">Shipping</option>
+              <option value="E-commerce">E-commerce</option>
+            </select>
+          </div>
+
+          <div className="form-actions">
+            <button
+              type="button"
+              className="btn-cancel"
+              onClick={handleCancel}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="btn-submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Registering..." : "Register Warehouse"}
+            </button>
+          </div>
+        </form>
       </div>
-    
-       </>
-    )
+    </div>
+  );
 }

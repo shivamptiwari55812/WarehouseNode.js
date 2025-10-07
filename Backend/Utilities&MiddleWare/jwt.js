@@ -1,19 +1,29 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-dotenv.config();
-console.log("JWT_KEY:", process.env.JWT_KEY);
 
+dotenv.config();
+
+// Make sure your .env has: JWT_SECRET=your_secret_key
+
+/**
+ * Generate JWT token
+ * @param {Object} user - user object containing at least _id and email
+ * @returns {string} token
+ */
 export const generateToken = (user) => {
   return jwt.sign(
-    { id: user._id, email: user.email }, // payload
-    process.env.JWT_KEY,                 // secret key
-    { expiresIn: "1d" }                   // expiration
+    { id: user._id, email: user.email ,warehouse: user.warehouse },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
   );
 };
 
+/**
+ * Middleware to authenticate JWT token
+ */
 export const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  const token = authHeader?.split(" ")[1]; // optional chaining
 
   if (!token) {
     return res.status(401).json({
@@ -24,9 +34,9 @@ export const authenticateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // store user info in request
+    req.user = decoded; // attach user info to request
     next();
-  } catch (error) {
+  } catch (err) {
     return res.status(403).json({
       success: false,
       message: "Invalid or expired token",

@@ -70,6 +70,8 @@ export const getOrderById = async (req, res) => {
 // Create new order
 export const createOrder = async (req, res) => {
   try {
+
+    console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({

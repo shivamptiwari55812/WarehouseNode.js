@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import { newUser1,otpDB } from "../model/authentication.js";
+import { User,otpDB } from "../model/authentication.js";
 dotenv.config();
 
 // Create a transporter

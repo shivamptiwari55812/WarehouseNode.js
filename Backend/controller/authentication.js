@@ -1,4 +1,4 @@
-import { Authentication, newUser1, otpDB } from "../model/authentication.js";
+import { Authentication, User, otpDB } from "../model/authentication.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../Utilities&MiddleWare/jwt.js";
 import { transporter, sendEmail } from "../Utilities&MiddleWare/email.js";
@@ -16,19 +16,19 @@ export const Login = async (req, res) => {
         .json({ message: "Please Provide both credentials!" });
     }
     const password = req.body.password;
-    const User = await newUser1.findOne({ email: req.body.email });
-    if (!User) {
+    const User1 = await User.findOne({ email: req.body.email });
+    if (!User1) {
       return res.status(400).json({ message: "User not Found!" });
     }
-    const token = generateToken(User);
-    const isMatch = await bcrypt.compare(password, User.password);
+    const token = generateToken(User1);
+    const isMatch = await bcrypt.compare(password, User1.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid password!" });
     }
     console.log(token);
     return res
       .status(200)
-      .json({ message: "Login Successfull", token });
+      .json({ message: "Login Successfull" ,token});
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: `${err.message}` });
@@ -48,7 +48,7 @@ export const registration = async (req, res) => {
       return res.status(403).json({ message: "All fields are required" });
     }
 
-    const existingUser = await newUser1.findOne({ email: email });
+    const existingUser = await User.findOne({ email: email });
 
     if (existingUser) {
       if (existingUser.isVerified) {
@@ -68,7 +68,7 @@ export const registration = async (req, res) => {
     let otp = OtpGenerator();
     const hashedPassword = await bcrypt.hash(req.body.password, saltround);
 
-    const newUser = await newUser1.create({
+    const newUser = await User.create({
       name,
       email,
       password: hashedPassword,
@@ -107,7 +107,7 @@ export const verifyOTP = async (req, res) => {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    const userDoc = await newUser1.findOne({ _id: existingOtp.userId });
+    const userDoc = await User.findOne({ _id: existingOtp.userId });
     if (!userDoc) {
       return res.status(404).json({ message: "User not found for this OTP" });
     }
@@ -138,7 +138,7 @@ export const resendOTP = async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "Email is required" });
 
-    const user = await newUser1.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "User not found" });
     if (user.isVerified) return res.status(400).json({ message: "User already verified" });
 
