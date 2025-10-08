@@ -318,3 +318,83 @@ export const getOrderStats = async (req, res) => {
     });
   }
 };
+
+//  Dashboard Summary 
+export const getDashboardSummary = async (req, res) => {
+  try {
+    const totalOrders = await Order.countDocuments();
+
+    const stockResult = await Product.aggregate([
+      { $group: { _id: null, totalStock: { $sum: "$stock" } } }
+    ]);
+
+    const stock = stockResult[0]?.totalStock || 0;
+
+    // Dummy analytics percentage (you can calculate real data later)
+    const analytics = Math.floor(Math.random() * 100);
+
+    res.status(200).json({
+      totalOrders,
+      stock,
+      analytics
+    });
+  } catch (error) {
+    console.error("Error in getDashboardSummary:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboard summary",
+      error: error.message
+    });
+  }
+};
+
+// Dashboard Status Distribution 
+export const getDashboardStatus = async (req, res) => {
+  try {
+    // Aggregate orders by status (case-insensitive)
+    const statuses = await Order.aggregate([
+      {
+        $group: {
+          _id: { $toLower: "$status" }, // normalize status to lowercase
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // Map aggregated data to frontend keys
+    const result = {
+      completed: statuses.find(s => s._id === "completed")?.count || 0,
+      processing: statuses.find(s => s._id === "processing")?.count || 0,
+      pending: statuses.find(s => s._id === "pending")?.count || 0,
+      cancelled: statuses.find(s => s._id === "cancelled")?.count || 0,
+    };
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error in getDashboardStatus:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboard status",
+      error: error.message,
+    });
+  }
+};
+
+// Dashboard Recent Orders — (for Recent Orders Table)
+export const getDashboardRecentOrders = async (req, res) => {
+  try {
+    const recentOrders = await Order.find()
+      .populate("company", "name email")
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    res.status(200).json({ data: recentOrders });
+  } catch (error) {
+    console.error("Error in getDashboardRecentOrders:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching recent orders",
+      error: error.message
+    });
+  }
+};
