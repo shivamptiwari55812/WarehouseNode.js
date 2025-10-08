@@ -2,7 +2,10 @@ import Order from "../model/Order.js";
 import Company from "../model/Company.js";
 import Product from "../model/Product.js";
 import { validationResult } from "express-validator";
-
+import { generateInvoicePDF } from "../Utilities&MiddleWare/pdfCreation.js";
+import { sendEmail } from "../Utilities&MiddleWare/email.js";
+import path from "path"
+import nodemailer from "nodemailer"
 // Get all orders
 export const getAllOrders = async (req, res) => {
   try {
@@ -70,49 +73,35 @@ export const getOrderById = async (req, res) => {
 // Create new order
 export const createOrder = async (req, res) => {
   try {
-
-    console.log(req.body);
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation errors",
-        errors: errors.array(),
-      });
-    }
+    if (!errors.isEmpty())
+      return res.status(400).json({ success: false, errors: errors.array() });
 
     const { orderType, companyId, products, notes, generatePDF } = req.body;
+    console.log("Creating order...");
 
-    // Verify company exists
+    // Verify company
     const company = await Company.findById(companyId);
-    if (!company) {
-      return res.status(404).json({
-        success: false,
-        message: "Company not found",
-      });
-    }
+    if (!company)
+      return res.status(404).json({ success: false, message: "Company not found" });
 
-    // Process products and calculate total
+    // Process products
     let totalAmount = 0;
     const processedProducts = [];
 
     for (const orderProduct of products) {
       const product = await Product.findById(orderProduct.productId);
-
-      if (!product) {
+      if (!product)
         return res.status(404).json({
           success: false,
           message: `Product not found: ${orderProduct.productId}`,
         });
-      }
 
-      // Check stock for outbound orders
-      if (orderType === "outbound" && product.stock < orderProduct.quantity) {
+      if (orderType === "outbound" && product.stock < orderProduct.quantity)
         return res.status(400).json({
           success: false,
-          message: `Insufficient stock for product: ${product.name}. Available: ${product.stock}, Requested: ${orderProduct.quantity}`,
+          message: `Insufficient stock for ${product.name}`,
         });
-      }
 
       const unitPrice = product.price;
       const totalPrice = unitPrice * orderProduct.quantity;
@@ -131,17 +120,14 @@ export const createOrder = async (req, res) => {
         totalPrice,
       });
 
-      // Update stock based on order type
-      if (orderType === "outbound") {
-        product.stock -= orderProduct.quantity;
-        await product.save();
-      } else if (orderType === "inbound") {
-        product.stock += orderProduct.quantity;
-        await product.save();
-      }
+      // Update stock
+      if (orderType === "outbound") product.stock -= orderProduct.quantity;
+      else if (orderType === "inbound") product.stock += orderProduct.quantity;
+
+      await product.save();
     }
 
-    // Create order
+    // Create order with user info
     const order = await Order.create({
       orderType,
       company: company._id,
@@ -157,11 +143,27 @@ export const createOrder = async (req, res) => {
       totalAmount,
       notes,
       pdfGenerated: generatePDF || false,
+      user: req.user.id, // track who created
     });
 
+    // Populate for response
     const populatedOrder = await Order.findById(order._id)
       .populate("company")
       .populate("products.productId");
+
+    // Generate PDF and send email if requested
+    if (generatePDF) {
+      const warehouse = {
+        name: "My Warehouse",
+        address: "123 Warehouse St, City",
+        GSTIN: "27ABCDE1234F1Z5",
+        email: "warehouse@example.com",
+        phone: "1234567890",
+      };
+
+      await sendEmail(populatedOrder, warehouse);
+      console.log("Invoice PDF emailed to company!");
+    }
 
     res.status(201).json({
       success: true,
@@ -169,6 +171,7 @@ export const createOrder = async (req, res) => {
       data: populatedOrder,
     });
   } catch (error) {
+    console.error("Error creating order:", error);
     res.status(500).json({
       success: false,
       message: "Error creating order",
@@ -184,7 +187,11 @@ export const updateOrderStatus = async (req, res) => {
 
     const order = await Order.findByIdAndUpdate(
       req.params.id,
-      { status, updatedAt: Date.now() },
+      {
+        status,
+        updatedAt: Date.now(),
+        updatedBy: req.user.id, // ✅ add the user ID here
+      },
       { new: true, runValidators: true }
     )
       .populate("company")
@@ -223,7 +230,7 @@ export const deleteOrder = async (req, res) => {
       });
     }
 
-    // Restore stock if it's an outbound order
+    // Restore stock if outbound
     if (order.orderType === "outbound") {
       for (const orderProduct of order.products) {
         const product = await Product.findById(orderProduct.productId);
@@ -233,6 +240,11 @@ export const deleteOrder = async (req, res) => {
         }
       }
     }
+
+    // Optional: track who deleted
+    order.deletedBy = req.user.id;
+    order.deletedAt = new Date();
+    await order.save(); // save the deletion info
 
     await Order.findByIdAndDelete(req.params.id);
 
@@ -249,9 +261,12 @@ export const deleteOrder = async (req, res) => {
   }
 };
 
+
 // Get order statistics
 export const getOrderStats = async (req, res) => {
   try {
+    console.log("Stats requested by user:", req.user.id); // optional logging
+
     const stats = await Order.aggregate([
       {
         $group: {
@@ -265,7 +280,6 @@ export const getOrderStats = async (req, res) => {
       },
     ]);
 
-    // Get total counts
     const totalStats = await Order.aggregate([
       {
         $group: {
@@ -284,6 +298,7 @@ export const getOrderStats = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      requestedBy: req.user.id, // optional
       data: {
         detailed: stats,
         summary:

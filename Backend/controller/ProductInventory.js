@@ -52,6 +52,7 @@ user:req.user.id
 
 export const SendProductDetails = async (req, res) => {
   try {
+    console.log("Shivam")
     const productData = await Product.find({ user: req.user.id });
     console.log(productData)
     return res.status(200).json(productData);

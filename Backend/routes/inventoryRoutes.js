@@ -28,4 +28,5 @@ router.delete("/products/delete/:id",authenticateToken, DeleteProduct);
 router.get("/products/getdetails/:id",authenticateToken,SendSingleProductDetails)
 router.put("/products/updates/:id",authenticateToken,updateInventoryByID);
 
+
 export default router;

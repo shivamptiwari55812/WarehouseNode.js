@@ -33,6 +33,9 @@ const locateInventory=()=>{
 const locateToDashboard= ()=>{
   navigate("/dashboard")
 }
+const locateLayout = ()=>{
+  navigate("/layout")
+}
     return(
         <>
         <nav>
@@ -82,7 +85,7 @@ const locateToDashboard= ()=>{
               <i className="fa fa-caret-down"></i>
             </button>
             <div className="dropdown-content">
-              <a href="">Layout</a>
+              <a href="" onClick={locateLayout}>Layout</a>
               <a href="" onClick={locateWarehouse}>Warehouse Details</a>
             </div>
            

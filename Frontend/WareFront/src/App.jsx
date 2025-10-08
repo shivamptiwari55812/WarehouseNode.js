@@ -20,6 +20,7 @@ import BarcodeScanner from "./components/setup/ScannerQR.tsx";
 import InventoryManagement from './components/Warehouse/InventoryManagement.jsx';
 import AddReport from './components/reports/AddReport.jsx';
 import AdminPanel from "./components/Warehouse/AdminPanel.jsx";
+import LocationMap  from "./components/Warehouse/Layout.jsx";
 
 // Layout for pages with Header
 function AuthLayout({ children }) {
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
   {path:"/qr-scanner",element:<QrScanner/>},
   {path:"/setWarehouse",element:<WarehouseDetails/>},
   { path: "/add-report", element: <AuthLayout><AddReport /></AuthLayout> },
+  {path:"/layout",element:<LocationMap />},
 
 
   // Authenticated pages

@@ -25,7 +25,7 @@ router.use("/admin/users", userRoutes);
 router.use("/admin/roles", roleRoutes); 
 
 router.use("/order-management", orderManagementRouter);
-router.use("/api/dashboard", dashboardRoutes);
+router.use("/dashboard", dashboardRoutes);
 router.use("/inventory", inventoryRoutes);
 router.use("/warehouse", warehouse);
 
