@@ -21,6 +21,9 @@ const locateOrder=()=>{
 const locateBill=()=>{
   navigate("/Bills")
 }
+const locateWarehouse=()=>{
+  navigate("/setWarehouse")
+}
 const locateAnnual=()=>{
   navigate("/AnnualReports")
 }
@@ -79,8 +82,10 @@ const locateToDashboard= ()=>{
               <i className="fa fa-caret-down"></i>
             </button>
             <div className="dropdown-content">
-              <a href="Layout.html">Layout</a>
+              <a href="">Layout</a>
+              <a href="" onClick={locateWarehouse}>Warehouse Details</a>
             </div>
+           
           </div> 
           <div className="dropdown">
             <button className="dropbtn">Reports 

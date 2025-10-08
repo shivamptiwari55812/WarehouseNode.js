@@ -54,6 +54,7 @@ const token = localStorage.getItem("token")
 
   // Fetch all products from backend
   const fetchProducts = async () => {
+    console.log("shivam fetch")
   setLoading(true);
   try {
     const response = await fetch(`${API_BASE_URL}/products/getdetails`, {
@@ -63,7 +64,9 @@ const token = localStorage.getItem("token")
     if (!response.ok) throw new Error("Failed to fetch products");
 
     const data = await response.json();
-    setProducts(data); // directly set the array
+   
+    setProducts(data);
+ // directly set the array
   } catch (err) {
     console.error(err);
     setError("Failed to load products");
@@ -88,7 +91,8 @@ const token = localStorage.getItem("token")
 
     const newProduct = await res.json();
     console.log(newProduct)
-    setProducts(data)
+setProducts((prev) => [...prev, newProduct.product || newProduct]);
+
     setShowAddModal(false);
     resetForm();
   } catch (err) {

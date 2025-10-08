@@ -18,6 +18,8 @@ import AnnualReports from "./components/reports/AnnualReports.jsx";
 import Bills from "./components/reports/Bills.jsx";
 import BarcodeScanner from "./components/setup/ScannerQR.tsx";
 import InventoryManagement from './components/Warehouse/InventoryManagement.jsx';
+import AddReport from './components/reports/AddReport.jsx';
+import AdminPanel from "./components/Warehouse/AdminPanel.jsx";
 
 // Layout for pages with Header
 function AuthLayout({ children }) {
@@ -46,6 +48,8 @@ const router = createBrowserRouter([
   { path: "/privacy-policy", element: <PrivacyPolicy /> },
   {path:"/qr-scanner",element:<QrScanner/>},
   {path:"/setWarehouse",element:<WarehouseDetails/>},
+  { path: "/add-report", element: <AuthLayout><AddReport /></AuthLayout> },
+
 
   // Authenticated pages
   { path: "/dashboard", element: <AuthLayout><Dashboard /></AuthLayout> },
@@ -55,9 +59,10 @@ const router = createBrowserRouter([
   { path: "/order-management", element: <AuthLayout><OrderManagement /></AuthLayout> },
   { path: "/roles", element: <AuthLayout><Roles /></AuthLayout> },
   { path: "/inbound-company-details", element: <AuthLayout><AddCompany /></AuthLayout> },
-  { path: "/warehouse-details", element: <AuthLayout><WarehouseDetails /></AuthLayout> },
   { path: "/annual-reports", element: <AuthLayout><AnnualReports /></AuthLayout> },
   { path: "/bills", element: <AuthLayout><Bills /></AuthLayout> },
+
+ { path: "/admin-panel", element: <AdminPanel /> },
 
   // 404 fallback
   { path: "*", element: <div>Page Not Found</div> }
