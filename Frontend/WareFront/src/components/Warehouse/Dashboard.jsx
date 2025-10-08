@@ -51,55 +51,43 @@ export function Dashboard ()  {
       .catch(err => console.error(err));
   }, []);
 
- const handleDownloadInvoice = async (orderId, pdfUrl) => {
-    setLoadingInvoice(prev => ({ ...prev, [orderId]: true }));
-    
-    try {
-      if (pdfUrl) {
-        // PDF already exists- download
-        const link = document.createElement('a');
-        link.href = pdfUrl;
-        link.download = `invoice-${orderId}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } else {
-        // PDF generate & download
-        const response = await fetch(`http://localhost:5050/order-management/orders/generate-invoice/${orderId}`);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log("Generated PDF response:", data); 
-        
-        if (data.pdfUrl) {
-          const link = document.createElement('a');
-          link.href = data.pdfUrl;
-          link.download = `invoice-${orderId}.pdf`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          
-          setOrders(prevOrders => 
-            prevOrders.map(order => 
-              order.orderId === orderId || order._id === orderId
-                ? { ...order, pdfPath: data.pdfUrl, pdfGenerated: true }
-                : order
-            )
-          );
-        } else {
-          throw new Error("PDF URL not received from server");
-        }
-      }
-    } catch (error) {
-      console.error("Invoice download error:", error);
-      alert(`Error: ${error.message || 'Something went wrong. Try again!'}`);
-    } finally {
-      setLoadingInvoice(prev => ({ ...prev, [orderId]: false }));
+ const handleDownloadInvoice = async (orderId) => {
+  setLoadingInvoice(prev => ({ ...prev, [orderId]: true }));
+
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Token missing! Please login again.");
+      return;
     }
-  };
+
+    const response = await fetch(`http://localhost:5050/order-management/orders/generate-invoice/${orderId}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `invoice-${orderId}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+  } catch (error) {
+    console.error("Invoice download error:", error);
+    alert(`Error: ${error.message || 'Something went wrong. Try again!'}`);
+  } finally {
+    setLoadingInvoice(prev => ({ ...prev, [orderId]: false }));
+  }
+};
+
 
 
   // Render pie chart dynamically
