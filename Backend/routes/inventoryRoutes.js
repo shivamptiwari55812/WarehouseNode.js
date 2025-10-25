@@ -26,7 +26,6 @@ router.get("/products/getdetails", authenticateToken,SendProductDetails);
 router.put("/products/update/:id", authenticateToken,productValidationRules, updateProduct);
 router.delete("/products/delete/:id",authenticateToken, DeleteProduct);
 router.get("/products/getdetails/:id",authenticateToken,SendSingleProductDetails)
-router.put("/products/updates/:id",authenticateToken,updateInventoryByID);
-
+router.patch("/products/:id/stock", authenticateToken, updateInventoryByID);
 
 export default router;
