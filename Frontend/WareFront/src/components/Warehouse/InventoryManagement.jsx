@@ -316,25 +316,56 @@ setProducts((prev) => [...prev, newProduct.product || newProduct]);
     return Array.from({ length: 20 }, (_, i) => (i + 1).toString()); // 1-20
   };
 
-  const exportInventory = () => {
-    const csvContent = [
-      "ID,Name,Category,Stock,Min Stock,Max Stock,Price,Supplier,Location,Status,Last Updated",
-      ...products.map(
-        (product) =>
-          `${product._id},"${product.name}","${product.category}",${product.stock},${product.minStock},${product.maxStock},${product.price},"${product.supplier}","${product.location}","${product.status}",${product.lastUpdated}`
-      ),
-    ].join("\n");
+ const exportInventory = () => {
+  if (!products || products.length === 0) return;
 
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `inventory-${new Date().toISOString().split("T")[0]}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  };
+  const headers = [
+    "ID",
+    "Name",
+    "SKU",
+    "Category",
+    "Stock",
+    "Min Stock",
+    "Max Stock",
+    "Price",
+    "Supplier",
+    "Location",
+    "Status",
+  ];
+
+  const csvRows = [
+    headers.join(","), // first row: headers
+    ...products.map(product => {
+      const row = [
+        product._id,
+        `"${product.name}"`,
+        `"${product.sku || ""}"`,
+        `"${product.category}"`,
+        product.stock,
+        product.minStock,
+        product.maxStock,
+        product.price,
+        `"${product.supplier || ""}"`,
+        `"${product.location || ""}"`,
+        product.status,
+        `"${(product.description || "").replace(/"/g, '""')}"`, // escape quotes
+        product.lastUpdated || ""
+      ];
+      return row.join(",");
+    })
+  ];
+
+  const csvContent = csvRows.join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv" });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `inventory-${new Date().toISOString().split("T")[0]}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+};
 
   return (
     <div className="inventory-management">

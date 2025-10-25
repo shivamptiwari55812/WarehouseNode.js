@@ -1,0 +1,124 @@
+.bulk-operations-container {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  padding: 50px;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #111827;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin-bottom: 40px;
+  font-size: 1rem;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #111827;
+}
+
+.card-subtitle {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+.upload-box {
+  border: 2px dashed #d1d5db;
+  border-radius: 10px;
+  background-color: #f9fafb;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+  color: #9ca3af;
+  margin-bottom: 15px;
+}
+
+.upload-text {
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 5px;
+}
+
+.upload-requirements {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.upload-button {
+  background-color: #111827;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-button:hover {
+  background-color: #1f2937;
+}
+
+.export-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.export-format-label {
+  color: #4b5563;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.export-button {
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #111827;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.2s;
+}
+
+.export-button:hover {
+  background-color: #f3f4f6;
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}

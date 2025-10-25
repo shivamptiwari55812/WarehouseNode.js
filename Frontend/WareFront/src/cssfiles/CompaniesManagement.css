@@ -1,0 +1,174 @@
+/* CompaniesManagement.css */
+
+/* Container */
+.companies-management {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+/* Header */
+.companies-management h2 {
+  color: orangered;
+  margin-bottom: 15px;
+  font-size: 40px;
+  font-weight: 600;
+}
+
+/* Controls: search + add button */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.controls input[type="text"] {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  flex: 1;
+  max-width: 300px;
+}
+.controls button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background-color: orangered;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+.controls button:hover {
+  opacity: 0.9;
+}
+
+/* Table */
+.companies-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.companies-table th,
+.companies-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+.companies-table th {
+  background-color: #f1f1f1;
+  font-weight: 600;
+}
+.companies-table tr:hover {
+  background-color: #fafafa;
+}
+
+/* Table buttons */
+.companies-table button {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+}
+.companies-table button:first-child {
+  background-color: #1e90ff;
+  color: #fff;
+}
+.companies-table button:last-child {
+  background-color: #dc3545;
+  color: #fff;
+}
+.companies-table button:hover {
+  opacity: 0.9;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal box */
+.modal {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+.modal h3 {
+  margin-top: 0;
+  color: orangered;
+  margin-bottom: 15px;
+}
+
+/* Modal form */
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.modal form input,
+.modal form textarea,
+.modal form select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 100%;
+}
+.modal textarea {
+  resize: vertical;
+}
+
+/* Modal action buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+.modal-actions button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+.modal-actions button:first-child {
+  background-color: #6c757d;
+  color: #fff;
+}
+.modal-actions button:last-child {
+  background-color: orangered;
+  color: #fff;
+}
+.modal-actions button:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .controls input {
+    max-width: 100%;
+  }
+}

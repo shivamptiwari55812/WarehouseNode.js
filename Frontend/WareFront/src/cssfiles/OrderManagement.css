@@ -1,9 +1,10 @@
 /* Order Management Styles */
+
 .order-management {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
-  padding-top:30vh;
+  padding-top:20vh;
   background-color: #fff;
   min-height: 100vh;
 }
@@ -12,7 +13,7 @@
     display:none;
 }
 .order-header {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 

@@ -1,0 +1,86 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  width: 400px;
+  max-width: 90%;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.upload-box {
+  border: 2px dashed #cbd5e1;
+  padding: 30px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.upload-icon {
+  color: #334155;
+  margin-bottom: 10px;
+}
+
+.select-file-btn {
+  background-color: #1e293b;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.select-file-btn:hover {
+  background-color: #0f172a;
+}
+
+.template-download {
+  margin-top: 25px;
+}
+
+.download-template-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.download-template-btn:hover {
+  background: #e2e8f0;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 14px;
+}
