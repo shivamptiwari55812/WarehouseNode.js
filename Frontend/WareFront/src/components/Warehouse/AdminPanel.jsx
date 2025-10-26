@@ -15,7 +15,7 @@ export function AdminPanel() {
   const [selectedProducts, setSelectedProducts] = useState(new Set());
    const handleLogout = () => {
     localStorage.removeItem('accessToken'); 
-    window.location.href = '/login'; 
+    window.location.href = '/adminPanel-login'; 
   };
 
   const toggleProductSelection = (id) => {
@@ -81,7 +81,7 @@ export function AdminPanel() {
       }
       alert(`${action.charAt(0).toUpperCase() + action.slice(1)} action applied!`);
       setSelectedOrders(new Set());
-      fetchOrders(); // Refresh orders
+      fetchOrders(); 
     } catch (err) {
       console.error(err);
       alert("Error performing action!");
@@ -156,7 +156,6 @@ export function AdminPanel() {
         </nav>
       </div>
 
-    
       <main className={`admin-main ${!sidebarOpen ? 'full' : ''}`}>
         {activeTab === 'inventory' && (
           <div className="warehouse-content">
@@ -234,17 +233,11 @@ export function AdminPanel() {
 )}
 
         {activeTab === 'companies' && (
-  <div className="warehouse-content">
-    <CompaniesManagement />
-  </div>
+        <div className="warehouse-content">
+          <CompaniesManagement />
+        </div>
 )}
-
-        {activeTab === 'bulk' && (
-          <div className="warehouse-content">
-            <BulkOperations />
-          </div>
-        )}
-      </main>
+    </main>
     </div>
   );
 }
