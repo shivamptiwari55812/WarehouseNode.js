@@ -7,6 +7,7 @@ import orderManagementRouter from "./router/orderManagement.js";
 import orderRoutes from "./routes/orderRoutes.js"; 
 import bulkUploadRoutes from "./routes/BulkUploadRoutes.js";
 import adminOrders from './routes/adminOrders.js';
+import adminCompanyRoutes from "./routes/adminCompanyRoutes.js";
 dotenv.config();
 connectDB();
 
@@ -24,6 +25,7 @@ app.use("/orderManagement", orderManagementRouter);
 app.use("/order-management", orderRoutes);
 app.use("/api/products", bulkUploadRoutes);
 app.use('/api/admin/orders', adminOrders);
+app.use("/admin", adminCompanyRoutes);
 
 const port = process.env.PORT || 5050;
 app.listen(port, () => {
