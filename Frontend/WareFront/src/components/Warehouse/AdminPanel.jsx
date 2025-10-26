@@ -124,6 +124,25 @@ export function AdminPanel() {
     }
   };
 
+  const [users, setUsers] = useState([]); 
+
+const fetchUsers = async () => {
+  try {
+    const res = await fetch("http://localhost:5050/api/admin/users", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    setUsers(data || []);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+  }
+};
+
+useEffect(() => {
+  if (activeTab === "users") fetchUsers();
+}, [activeTab]);
+
+
   return (
     <div className="admin-panel">
       <div className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
@@ -149,6 +168,11 @@ export function AdminPanel() {
           <button className={`nav-item ${activeTab === 'companies' ? 'active' : ''}`} onClick={() => setActiveTab('companies')}>
             <Building2 /> {sidebarOpen && <span>Companies</span>}
           </button>
+          <button className={`nav-item ${activeTab === 'users' ? 'active' : ''}`} 
+            onClick={() => setActiveTab('users')}>
+            <Users /> {sidebarOpen && <span>Users</span>}
+          </button>
+
           <button className="nav-item logout-button" onClick={handleLogout}>
           <X /> {sidebarOpen && <span>Logout</span>}
         </button>
@@ -237,6 +261,31 @@ export function AdminPanel() {
           <CompaniesManagement />
         </div>
 )}
+
+{activeTab === 'users' && (
+  <div className="warehouse-content">
+    <h2>Registered Users</h2>
+    <table className="admin-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Verified</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map(user => (
+          <tr key={user._id}>
+            <td>{user.name}</td>
+            <td>{user.email}</td>
+            <td>{user.isVerified ? "Yes" : "No"}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
     </main>
     </div>
   );
