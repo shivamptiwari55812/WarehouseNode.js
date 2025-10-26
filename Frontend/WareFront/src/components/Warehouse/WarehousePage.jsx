@@ -10,17 +10,17 @@ const WarehousePage = () => {
   };
 
   return (
-    <div className="warehouse-container">
+    <div className="warehouse1-container">
       <div className="icon-circle">
         <img
           src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png"
           alt="warehouse icon"
-          className="warehouse-icon"
+          className="warehouse1-icon"
         />
       </div>
 
-      <h1 className="warehouse-title">Warehouse Management</h1>
-      <p className="warehouse-description">
+      <h1 className="warehouse1-title">Warehouse Management</h1>
+      <p className="warehouse1-description">
         Complete admin panel for managing your warehouse operations efficiently
       </p>
 

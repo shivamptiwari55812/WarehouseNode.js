@@ -1,4 +1,4 @@
-.warehouse-container {
+.warehouse1-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,19 +21,19 @@
   margin-bottom: 20px;
 }
 
-.warehouse-icon {
+.warehouse1-icon {
   width: 40px;
   height: 40px;
   filter: invert(15%) sepia(5%) saturate(15%) hue-rotate(180deg);
 }
 
-.warehouse-title {
+.warehouse1-title {
   font-size: 2rem;
   font-weight: 700;
   margin: 10px 0;
 }
 
-.warehouse-description {
+.warehouse1-description {
   font-size: 1rem;
   color: #5a6b7a;
   max-width: 400px;
