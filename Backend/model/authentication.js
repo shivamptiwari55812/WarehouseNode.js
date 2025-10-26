@@ -46,8 +46,8 @@ const newUser = new mongoose.Schema({
         required: true,
     },
       
-    isVerified: { type: Boolean, default: false }
-    
+    isVerified: { type: Boolean, default: false },
+    role: { type: String, enum: ["user", "admin"], default: "user" }
 },{timestamps:true});
 
 
