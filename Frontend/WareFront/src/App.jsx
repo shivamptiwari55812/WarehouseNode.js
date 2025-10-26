@@ -21,6 +21,8 @@ import InventoryManagement from './components/Warehouse/InventoryManagement.jsx'
 import AddReport from './components/reports/AddReport.jsx';
 import AdminPanel from "./components/Warehouse/AdminPanel.jsx";
 import LocationMap  from "./components/Warehouse/Layout.jsx";
+import WarehousePage from './components/Warehouse/WarehousePage.jsx';
+import AdminPanelLogin from './components/Warehouse/AdminPanelLogin';
 
 // Layout for pages with Header
 function AuthLayout({ children }) {
@@ -65,7 +67,8 @@ const router = createBrowserRouter([
   { path: "/bills", element: <AuthLayout><Bills /></AuthLayout> },
 
  { path: "/admin-panel", element: <AdminPanel /> },
-
+ { path: "/warehouse-page", element: <WarehousePage /> },
+ { path: "/adminPanel-login", element: <AdminPanelLogin/>},
   // 404 fallback
   { path: "*", element: <div>Page Not Found</div> }
 ]);
