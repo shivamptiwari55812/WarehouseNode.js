@@ -411,7 +411,7 @@ setProducts((prev) => [...prev, newProduct.product || newProduct]);
           </div>
         </div>
         <div className="stat-card">
-          <div className="value-indicator">$</div>
+          <div className="value-indicator">₹</div>
           <div>
             <h3>${stockStats.totalValue.toLocaleString()}</h3>
             <p>Total Value</p>
@@ -642,7 +642,7 @@ setProducts((prev) => [...prev, newProduct.product || newProduct]);
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Price ($)</label>
+                    <label>Price (₹)</label>
                     <input
                       type="number"
                       name="price"
@@ -854,7 +854,7 @@ setProducts((prev) => [...prev, newProduct.product || newProduct]);
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Price ($)</label>
+                    <label>Price (₹)</label>
                     <input
                       type="number"
                       name="price"
